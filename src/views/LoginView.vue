@@ -29,8 +29,8 @@ const handleLogin = () => {
         padding-left: 1rem;
     }
     .login-input::placeholder {
-        font-size: 1rem;
         color: #bfbfbf;
+        font-weight: 500;
     }
     
 </style>

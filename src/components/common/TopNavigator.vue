@@ -6,8 +6,8 @@
 <style scoped>
 .container {
     height: 3.5rem;
-    background-color: blue;
+    background-color: beige;
     flex-shrink: 0;
-    border-top: 1px solid black;
+    border-bottom: 1px solid black;
 }
 </style>
