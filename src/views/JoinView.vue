@@ -2,7 +2,8 @@
 </script>
 
 <template>
-    <div class="container"><div class="box">hello</div></div>
+    <div class="container">
+    </div>
 </template>
 
 <style scoped>
@@ -11,7 +12,5 @@
         background-color: green;
         overflow-y: auto;
     }
-    .box {
-        height:1000rem;
-    }
+    
 </style>
