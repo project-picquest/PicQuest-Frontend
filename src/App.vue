@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
-  <div class="app-box">
-    <TopNavigator />
-    <router-view></router-view>
-    <BottomNavigator />
-  </div>
+    <div class="app-box">
+      <TopNavigator />
+      <router-view></router-view>
+      <BottomNavigator />
+    </div>
   </div>
 </template>
 
@@ -13,12 +13,11 @@ import BottomNavigator from './components/common/BottomNavigator.vue';
 import TopNavigator from './components/common/TopNavigator.vue';
 
 export default {
-  components : {
+  components: {
     TopNavigator,
-    BottomNavigator
-  }
-}
-
+    BottomNavigator,
+  },
+};
 </script>
 <style scoped>
 .app-container {
@@ -32,7 +31,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 30rem;
+  width: 35rem;
   height: 100vh;
   background-color: white;
 }
