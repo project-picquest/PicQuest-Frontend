@@ -58,7 +58,7 @@ const navigateJoin = () => {
 }
 
 .login-input {
-  width: 25rem;
+  width: 28rem;
   height: 3.5rem;
   background-color: #f5f5f5;
   border-radius: 10px;
@@ -80,7 +80,7 @@ const navigateJoin = () => {
 .input-box {
   display: flex;
   flex-direction: column;
-  margin-bottom: 0.8rem;
+  margin-bottom: 1.5rem;
 }
 
 .input-box > label {
@@ -95,7 +95,7 @@ const navigateJoin = () => {
   font-weight: 600;
   color: white;
   border-radius: 10px;
-  margin-top: 0.8rem;
+  margin-top: 1rem;
 }
 
 .logo {

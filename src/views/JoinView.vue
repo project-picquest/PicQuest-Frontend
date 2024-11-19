@@ -43,7 +43,7 @@
             placeholder="위 비밀번호와 동일하게 입력"
           />
         </div>
-        <button class="login-button">로그인</button>
+        <button class="login-button">회원가입</button>
       </form>
     </div>
     <div class="navigate-container">
@@ -78,7 +78,7 @@ const navigateLogin = () => {
 }
 
 .login-input {
-  width: 25rem;
+  width: 28rem;
   height: 3.5rem;
   background-color: #f5f5f5;
   border-radius: 10px;
@@ -100,7 +100,7 @@ const navigateLogin = () => {
 .input-box {
   display: flex;
   flex-direction: column;
-  margin-bottom: 0.8rem;
+  margin-bottom: 1.5rem;
 }
 
 .input-box > label {
@@ -115,7 +115,7 @@ const navigateLogin = () => {
   font-weight: 600;
   color: white;
   border-radius: 10px;
-  margin-top: 0.8rem;
+  margin-top: 1rem;
 }
 
 .logo {

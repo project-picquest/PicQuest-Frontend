@@ -25,13 +25,13 @@ export default {
   justify-content: center;
   width: 100%;
   height: 100vh;
-  background-color: aqua;
+  background-color: bisque;
 }
 .app-box {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 35rem;
+  width: 42rem;
   height: 100vh;
   background-color: white;
 }
