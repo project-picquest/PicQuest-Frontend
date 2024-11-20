@@ -24,6 +24,11 @@ const router = createRouter({
       name: 'quest',
       component: () => import('@/views/QuestView.vue'),
     },
+    {
+      path: '/attraction/:id',
+      name: 'attraction',
+      component: () => import('@/views/AttractionView.vue')
+    },
   ],
 });
 
