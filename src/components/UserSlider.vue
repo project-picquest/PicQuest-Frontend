@@ -26,7 +26,7 @@
 .container {
   display: flex;
   flex-direction: row !important;
-  width: 30rem;
+  width: 33rem;
   gap: 1.2rem;
 }
 

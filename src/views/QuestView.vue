@@ -95,10 +95,7 @@
   border-radius: 10px;
 }
 
-.title-container {
-  /* background-color: green; */
-  /* flex-grow: 1; */
-}
+
 
 .title-box {
   margin-left: 1rem;

@@ -26,12 +26,17 @@
 .container {
   display: flex;
   flex-direction: row !important;
-  width: 30rem;
+  width: 33rem;
+  height: 6rem;
   gap: 1.2rem;
+  /* background-color: red; */
 }
 
 .left-container {
+  display: flex;
+  align-items: center;
   width: 5rem;
+  height: 100%;
   /* background-color: green; */
 }
 
@@ -92,12 +97,17 @@
 }
 
 .right-container {
+  position: relative;
+  align-items: center;
   width: 2.5rem;
-  /* background-color: red; */
-  margin-top: 2rem;
+  height: 100%;
+  /* background-color: yellow; */
+
 }
 
 .right-container span {
+    position: absolute;
+    top: 3.2rem;
     font-weight: 700;
     color: #f74320;
 }

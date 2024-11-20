@@ -43,6 +43,12 @@ const router = createRouter({
       }]
     },
     {
+      path: '/profile/:nickname',
+      name: 'profile',
+      component: () => import('@/views/ProfileView.vue')
+
+    },
+    {
       path: '/:catchAll(.*)',
       name: 'error',
       component: () => import('@/views/ErrorView.vue')

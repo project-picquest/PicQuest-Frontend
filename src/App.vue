@@ -25,7 +25,7 @@ export default {
   justify-content: center;
   width: 100%;
   height: 100vh;
-  background-color: bisque;
+  background-color: #fafafa;
 }
 .app-box {
   display: flex;

@@ -56,7 +56,7 @@ const navigateQuest = (id) => {
 }
 
 .submit-button {
-  width: 30rem;
+  width: 33rem;
   height: 3.5rem;
   background-color: #f74320;
   font-weight: 600;
