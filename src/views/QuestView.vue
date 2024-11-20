@@ -25,7 +25,7 @@
 
       <div class="picture-container">
         <div class="title-box">
-          <span>관광지 이름 입력하기</span>
+          <span>관광지 사진 등록하기</span>
         </div>
         <div class="picture-input-box"></div>
       </div>
@@ -92,7 +92,7 @@
 
 .title-container {
   /* background-color: green; */
-  flex-grow: 1;
+  /* flex-grow: 1; */
 }
 
 .title-box {
@@ -115,24 +115,31 @@
   margin-top: 0.8rem;
 }
 
-.picture-container {
-  /* background-color: blue; */
-}
-
 .main-container {
   display: flex;
   flex-direction: column;
   width: 38rem;
   height: 100%;
-
-  background-color: blue;
+  /* background-color: blue; */
   /* flex-grow: 1; */
+  margin-top: 2rem;
+  margin-bottom: 2rem;
 }
 
+.picture-container {
+  flex-grow: 1;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+
 .picture-input-box {
-  width: 10rem;
-  height: 10rem;
+  flex-grow: 1;
+  width: 30%;
+  padding-top: 30%;
   border-radius: 1rem;
-  border: 2px solid black;
+  border: 2px solid #d9d9d9;
+  /* background-color: yellow; */
+  margin-left : 0.5rem;
 }
 </style>
