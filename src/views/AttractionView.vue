@@ -38,6 +38,11 @@
   height: 100vh;
   overflow-y: auto;
 }
+
+.container::-webkit-scrollbar {
+  display:none;
+}
+
 .image-container {
   width: 38rem;
   height: 40rem;

@@ -43,6 +43,11 @@
   height: 100vh;
   overflow-y: auto;
 }
+
+.container::-webkit-scrollbar {
+  display:none;
+}
+
 .image-container {
   width: 38rem;
   height: 40rem;
@@ -120,7 +125,7 @@
   flex-direction: column;
   width: 38rem;
   height: 100%;
-  background-color: blue;
+  /* background-color: blue; */
   /* flex-grow: 1; */
   margin-top: 2rem;
   margin-bottom: 2rem;

@@ -20,7 +20,7 @@ const router = createRouter({
       component: () => import('@/views/JoinView.vue'),
     },
     {
-      path: '/quest',
+      path: '/quest/:id',
       name: 'quest',
       component: () => import('@/views/QuestView.vue'),
     },
@@ -29,6 +29,24 @@ const router = createRouter({
       name: 'attraction',
       component: () => import('@/views/AttractionView.vue')
     },
+    {
+      path: '/result',
+      name: 'result',
+      children : [{
+        path: 'success/:id',
+        name: 'success',
+        component: () => import('@/views/SuccessView.vue')
+      }, {
+        path: 'fail/:id',
+        name: 'fail',
+        component: () => import('@/views/FailView.vue')
+      }]
+    },
+    {
+      path: '/:catchAll(.*)',
+      name: 'error',
+      component: () => import('@/views/ErrorView.vue')
+    }
   ],
 });
 
