@@ -47,6 +47,7 @@ const navigateJoin = () => {
 </script>
 
 <style scoped>
+
 .container {
   display: flex;
   flex-direction: column;
