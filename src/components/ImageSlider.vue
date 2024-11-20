@@ -73,7 +73,7 @@
   height: 0.5rem;
   background-color: #f74320;
   border-radius: 3px;
-  animation : fillLevel 2s ease-out forwards;
+  animation : fillLevel 1.5s ease-out forwards;
 }
 
 .text-box {
@@ -92,7 +92,7 @@
 }
 
 .right-container {
-  width: 3.5rem;
+  width: 2.5rem;
   /* background-color: red; */
   margin-top: 2rem;
 }

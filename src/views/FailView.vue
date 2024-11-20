@@ -9,17 +9,23 @@
       <ImageSlider />
 
     </div>
+    <button @click="navigateQuest(id)" class="submit-button">재도전하기</button>
   </div>
 </template>
-<script>
+<script setup>
+import { useRouter, useRoute } from "vue-router";
 import ImageSlider from "@/components/ImageSlider.vue";
-import UserSlider from "@/components/UserSlider.vue";
-export default {
-  components: {
-    ImageSlider,
-    UserSlider,
-  },
-};
+
+const route = useRoute();
+const router = useRouter();
+
+const id = route.params.id;
+
+const navigateQuest = (id) => {
+  router.push(`/quest/${id}`)
+  console.log('클릭')
+}
+
 </script>
 <style scoped>
 .container {
@@ -47,5 +53,15 @@ export default {
 .message-container :nth-child(3) {
   font-size: 1.2rem;
   font-weight: 600;
+}
+
+.submit-button {
+  width: 30rem;
+  height: 3.5rem;
+  background-color: #f74320;
+  font-weight: 600;
+  color: white;
+  border-radius: 10px;
+  margin-top: 2.5rem;
 }
 </style>
