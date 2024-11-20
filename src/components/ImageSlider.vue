@@ -73,6 +73,7 @@
   height: 0.5rem;
   background-color: #f74320;
   border-radius: 3px;
+  animation : fillLevel 2s ease-out forwards;
 }
 
 .text-box {
@@ -99,5 +100,14 @@
 .right-container span {
     font-weight: 700;
     color: #f74320;
+}
+
+@keyframes fillLevel {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 77%;
+  }
 }
 </style>
