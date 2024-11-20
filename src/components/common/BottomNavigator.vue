@@ -1,11 +1,11 @@
 <template>
   <div class="container">
-    <div class="icon-container" @click="navigateHome">
+    <div class="icon-container" @click="navigateHome" :class="{'active-hm' : currentPath[1] === 'home'}">
       <i data-feather="home" class="icon"></i>
       <p>홈</p>
     </div>
     <div>
-      <div class="icon-container" @click="navigateQuest">
+      <div class="icon-container" @click="navigateQuest" :class="{'active-qp' : currentPath[1] === 'quest'}">
         <i data-feather="star" class="icon"></i>
         <p>일일 퀘스트</p>
       </div>
@@ -17,7 +17,7 @@
       </div>
     </div>
     <div>
-      <div class="icon-container" @click="navigateProfile">
+      <div class="icon-container" @click="navigateProfile" :class="{'active-qp' : currentPath[1] === 'profile'}">
         <i data-feather="user" class="icon"></i>
         <p>나의 정보</p>
       </div>
@@ -27,26 +27,35 @@
 
 <script setup>
 import feather from "feather-icons";
-import { onMounted } from "vue";
-import {useRouter} from "vue-router"
+import { onMounted, ref, watch } from "vue";
+import { useRouter, useRoute } from "vue-router";
 
 const router = useRouter();
+const route = useRoute();
+const currentPath = ref("");
 
 const navigateHome = () => {
-    router.push('/');
-}
+  router.push("/home");
+};
 const navigateQuest = () => {
-    router.push('/quest/1');
-}
+  router.push("/quest/1");
+};
 const navigateMap = () => {
-    alert('추가 예정인 기능입니다.')
-}
+  alert("추가 예정인 기능입니다.");
+};
 const navigateProfile = () => {
-    router.push('/profile/hellosonic')
-}
+  router.push("/profile/hellosonic");
+};
+
+watch(
+  () => route.path,
+  (newPath) => {
+    currentPath.value = newPath.split("/");
+  },
+  { immediate: true }
+);
 
 onMounted(() => {
-  // 컴포넌트가 마운트된 후에 아이콘을 SVG로 변환
   feather.replace();
 });
 </script>
@@ -67,6 +76,15 @@ onMounted(() => {
   align-items: center;
   cursor: pointer;
   /* background-color: blue; */
+}
+
+.icon-container.active-qp .icon{
+    fill: #2b3d4f;
+}
+.icon-container.active-hm .icon{
+    stroke-width: 1px;
+    stroke: #ffffff;
+    fill: #2b3d4f;
 }
 
 .icon-container p {
