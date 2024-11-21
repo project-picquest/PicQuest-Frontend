@@ -2,48 +2,48 @@
   <div class="container">
     <p class="logo">PicQuest</p>
     <div class="input-container">
-      <form @submit.prevent="handleLogin">
+      <form @submit.prevent="handleJoin">
         <div class="input-box">
           <label for="email">아이디</label>
           <input
-            class="login-input"
+            class="join-input"
             type="email"
             id="email"
-            v-model="email"
+            v-model="userInfo.email"
             placeholder="abc@picquest.co.kr"
           />
         </div>
         <div class="input-box">
-          <label for="name">이름</label>
+          <label for="nickname">닉네임</label>
           <input
-            class="login-input"
+            class="join-input"
             type="text"
-            id="name"
-            v-model="name"
+            id="nickname"
+            v-model="userInfo.nickname"
             placeholder="홍길동"
           />
         </div>
         <div class="input-box">
           <label for="password">비밀번호</label>
           <input
-            class="login-input"
+            class="join-input"
             type="password"
             id="password"
-            v-model="password"
+            v-model="userInfo.password"
             placeholder="최소 8자 이상"
           />
         </div>
         <div class="input-box">
-          <label for="password">비밀번호</label>
+          <label for="checkpassword">비밀번호</label>
           <input
-            class="login-input"
+            class="join-input"
             type="password"
             id="checkpassword"
             v-model="checkpassword"
             placeholder="위 비밀번호와 동일하게 입력"
           />
         </div>
-        <button class="login-button">회원가입</button>
+        <button class="join-button">회원가입</button>
       </form>
     </div>
     <div class="navigate-container">
@@ -54,16 +54,34 @@
 </template>
 <script setup>
 import { useRouter } from 'vue-router';
+import { useLoginState } from '@/stores/loginState';
+import { ref } from 'vue';
+import { _join } from '@/api';
+
+const loginState = useLoginState();
+
+const userInfo = ref({
+  email : '',
+  nickname : '',
+  password : ''
+})
 
 const router = useRouter();
 
-const handleLogin = () => {
-  console.log('로그인');
+const handleJoin = () => {
+  _join(userInfo.value, (response) => {
+    console.log('로그인 성공', response);
+    loginState.login();
+    router.push('/')
+  }, (error) => {
+    console.error('로그인 실패', error)
+  })
 };
 
 const navigateLogin = () => {
   router.push('/login');
 };
+
 </script>
 
 <style scoped>
@@ -77,14 +95,14 @@ const navigateLogin = () => {
   overflow-y: auto;
 }
 
-.login-input {
+.join-input {
   width: 28rem;
   height: 3.5rem;
   background-color: #f5f5f5;
   border-radius: 10px;
   padding-left: 1rem;
 }
-.login-input::placeholder {
+.join-input::placeholder {
   color: #bfbfbf;
   font-weight: 500;
 }
@@ -108,7 +126,7 @@ const navigateLogin = () => {
   font-weight: 600;
 }
 
-.login-button {
+.join-button {
   width: 100%;
   height: 3.5rem;
   background-color: #f74320;

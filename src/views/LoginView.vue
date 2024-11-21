@@ -35,7 +35,7 @@
 <script setup>
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
-import { _login } from '@/api/user';
+import { _login } from '@/api';
 import { useLoginState } from '@/stores/loginState';
 
 const loginState = useLoginState();
