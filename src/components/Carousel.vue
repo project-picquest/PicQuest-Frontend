@@ -70,7 +70,7 @@ const updateVisibleImages = () => {
   justify-content: center;
   align-items: center;
   width: 33.33%;
-  height: 11rem;
+  aspect-ratio: 1/1;
   padding: 0 0.5rem;
   overflow: hidden;
 }
