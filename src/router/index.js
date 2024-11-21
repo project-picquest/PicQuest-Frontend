@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import HomeView from '../views/HomeView.vue';
+import { useLoginState } from '@/stores/loginState';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,7 +11,7 @@ const router = createRouter({
     {
       path: '/home',
       name: 'home',
-      component: HomeView,
+      component: () => import('@/views/HomeView.vue'),
     },
     {
       path: '/login',
@@ -27,6 +27,15 @@ const router = createRouter({
       path: '/quest/:id',
       name: 'quest',
       component: () => import('@/views/QuestView.vue'),
+      beforeEnter: (to, from, next) => {
+        const loginState = useLoginState();
+        if (!loginState.isLogin) {
+          alert('로그인 후 이용 가능합니다.')
+          next('/login');
+        } else {
+          next();
+        }
+      } 
     },
     {
       path: '/attraction/:id',
@@ -49,7 +58,16 @@ const router = createRouter({
     {
       path: '/profile/:nickname',
       name: 'profile',
-      component: () => import('@/views/ProfileView.vue')
+      component: () => import('@/views/ProfileView.vue'),
+      beforeEnter: (to, from, next) => {
+        const loginState = useLoginState();
+        if (!loginState.isLogin) {
+          alert('로그인 후 이용 가능합니다.')
+          next('/login');
+        } else {
+          next();
+        }
+      } 
 
     },
     {
