@@ -9,7 +9,7 @@
             class="login-input"
             type="email"
             id="email"
-            v-model="email"
+            v-model="userInfo.email"
             placeholder="abc@picquest.co.kr"
           />
         </div>
@@ -19,7 +19,7 @@
             class="login-input"
             type="password"
             id="password"
-            v-model="password"
+            v-model="userInfo.password"
             placeholder="비밀번호를 입력하세요."
           />
         </div>
@@ -34,16 +34,36 @@
 </template>
 <script setup>
 import { useRouter } from 'vue-router';
+import { ref } from 'vue';
+import { _login } from '@/api/user';
+import { useLoginState } from '@/stores/loginState';
+
+const loginState = useLoginState();
+
+const userInfo = ref({
+  email : '',
+  password: '',
+});
 
 const router = useRouter();
 
 const handleLogin = () => {
-  console.log('로그인');
+  console.log('로그인 시도: ', userInfo.value);
+  _login(userInfo.value, (response) =>{
+    console.log('로그인 성공', response);
+    loginState.login();
+    router.push('/');
+  }, (error) => {
+    console.error('로그인 실패', error)
+  })
+
 };
 
 const navigateJoin = () => {
   router.push('/join');
 };
+
+
 </script>
 
 <style scoped>

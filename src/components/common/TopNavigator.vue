@@ -5,18 +5,47 @@
     </div>
     <div class="center-container"></div>
     <div class="right-container">
-      <button @click="navigateLogin">로그인/회원가입</button>
+      <!-- <button :class="{'show' : currentPath[1] === ('login' || 'join')}" v-if="!userInfo.email" @click="navigateLogin">로그인/회원가입</button>
+      <button :class="{'show' : currentPath[1] === ('login' || 'join')}" v-else @click="handleLogout">로그아웃</button> -->
+      <button v-if="!loginState.isLogin" @click="navigateLogin">로그인/회원가입</button>
+      <button v-else @click="handleLogout">로그아웃</button>
     </div>
   </div>
 </template>
 
 <script setup>
+import { onMounted, ref} from "vue";
 import { useRouter } from "vue-router";
+import { useLoginState } from "@/stores/loginState";
 
+const loginState = useLoginState();
 const router = useRouter();
+// const route = useRoute();
 const navigateLogin = () => {
   router.push("/login");
 };
+
+
+const handleLogout = () => {
+  // TODO: 로그아웃 API 연동
+  loginState.logout();
+  router.push('/login');
+}
+
+
+// const currentPath = ref("");
+
+
+
+
+// watch(
+//   () => route.path,
+//   (newPath) => {
+//     currentPath.value = newPath.split("/");
+//     console.log(currentPath.value)
+//   },
+//   { immediate: true }
+// );
 </script>
 <style scoped>
 .container {
@@ -67,4 +96,8 @@ const navigateLogin = () => {
   font-weight: 800;
   font-size: 1.5rem;
 }
+
+/* .right-container button.show {
+  display: none;
+} */
 </style>
