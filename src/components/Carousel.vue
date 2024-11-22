@@ -3,8 +3,8 @@
     <button @click="prev" class="carousel-button prev">‹</button>
 
     <div class="carousel">
-      <div class="carousel-item" v-for="(image, index) in visibleImages" :key="index">
-        <img :src="image" alt="carousel image" class="carousel-image" />
+      <div class="carousel-item" v-for="(item, index) in visibleImages" :key="index">
+        <img :src="item.img" alt="carousel image" class="carousel-image" />
         
       </div>
     </div>
@@ -13,17 +13,20 @@
 </template>
 
 <script setup>
+import { defineProps } from 'vue'
 import { ref } from "vue";
 
-const images = ref([
-  "https://cdn.vuetifyjs.com/images/cards/docks.jpg",
-  "https://cdn.vuetifyjs.com/images/cards/hotel.jpg",
-  "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
-  "https://cdn.vuetifyjs.com/images/cards/nature.jpg",
-  "https://cdn.vuetifyjs.com/images/cards/plane.jpg",
-]);
+const props = defineProps({
+  quests : {
+    type : Array,
+    required: true,
+  }
+})
 
-const visibleImages = ref(images.value.slice(0, 3));
+const data = ref([]);
+data.value = props.quests;
+
+const visibleImages = ref(data.value.slice(0, 3));
 
 const currentIndex = ref(0);
 
@@ -31,13 +34,13 @@ const prev = () => {
   if (currentIndex.value > 0) {
     currentIndex.value--;
   } else {
-    currentIndex.value = images.value.length - 3;
+    currentIndex.value = data.value.length - 3;
   }
   updateVisibleImages();
 };
 
 const next = () => {
-  if (currentIndex.value < images.value.length - 3) {
+  if (currentIndex.value < data.value.length - 3) {
     currentIndex.value++;
   } else {
     currentIndex.value = 0;
@@ -46,7 +49,7 @@ const next = () => {
 };
 
 const updateVisibleImages = () => {
-  visibleImages.value = images.value.slice(currentIndex.value, currentIndex.value + 3);
+  visibleImages.value = data.value.slice(currentIndex.value, currentIndex.value + 3);
 };
 </script>
 

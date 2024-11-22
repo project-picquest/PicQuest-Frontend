@@ -4,7 +4,9 @@
       <div class="title-box">
         <span>일일 퀘스트</span>
       </div>
-      <Carousel />
+      <!-- <Carousel :quests="quests" /> -->
+      <Carousel v-if="quests.length > 0" :quests="quests" />
+
     </div>
     <div class="search-container">
       <div class="title-box">
@@ -48,21 +50,36 @@
 </template>
 
 <script setup>
-import { _getAttractions, _getAttractionsByTitle } from "@/api";
+import { _getAttractions, _getAttractionsByTitle, _getQuests } from "@/api";
 import Carousel from "@/components/Carousel.vue";
 import feather from "feather-icons";
 import { onMounted, ref } from "vue";
 import noImage from "@/assets/no-image.jpg";
 import { useRouter } from "vue-router";
+import { useLoginState} from "@/stores/loginState"
 
 const router = useRouter();
+const loginState = useLoginState();
+const quests = ref([]);
 const attractions = ref([]);
 const searchTitle = ref("");
 
 onMounted(() => {
   feather.replace();
+  getQuests();
   getAttractions();
 });
+
+const getQuests = () => {
+  const requestParam = {
+    'email' : loginState.isLogin ? loginState.email : null
+  }
+  _getQuests(requestParam, (response) => {
+    quests.value = response.data;
+  }, (error) => {
+    console.error('_getQuests 실패', error)
+  })
+}
 
 const getAttractions = () => {
   _getAttractions(
