@@ -14,10 +14,22 @@ const _join = (param, success, fail) => {
     .catch(fail)
 }
 
-const _questSubmit = (param, success, fail) => {
+const _postQuest = (param, success, fail) => {
     local.post('quests/submit', param)
     .then(success)
     .catch(fail)
 }
 
-export {_login, _join, _questSubmit};
+const _getAttractions = (success, fail) => {
+    local.get('/attractions')
+    .then(success)
+    .catch(fail)
+}
+
+const _getAttractionsByTitle = (title, success, fail) => {
+    local.get(`/attractions/${title}`)
+    .then(success)
+    .catch(fail)
+}
+
+export {_login, _join, _questSubmit, _postQuest, _getAttractions, _getAttractionsByTitle};
