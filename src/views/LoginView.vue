@@ -33,41 +33,44 @@
   </div>
 </template>
 <script setup>
-import { useRouter } from 'vue-router';
-import { ref } from 'vue';
-import { _login } from '@/api';
-import { useLoginState } from '@/stores/loginState';
+import { useRouter } from "vue-router";
+import { ref } from "vue";
+import { _login } from "@/api";
+import { useLoginState } from "@/stores/loginState";
 
 const loginState = useLoginState();
 
 const userInfo = ref({
-  email : '',
-  password: '',
+  email: "",
+  password: "",
 });
 
 const router = useRouter();
 
 const handleLogin = () => {
-  console.log('로그인 시도: ', userInfo.value);
-  _login(userInfo.value, (response) =>{
-    console.log('로그인 성공', response);
-    loginState.login();
-    router.push('/');
-  }, (error) => {
-    console.error('로그인 실패', error)
-  })
+  console.log("로그인 시도: ", userInfo.value);
+  _login(
+    userInfo.value,
+    (response) => {
+      console.log("로그인 성공", response);
+      loginState.login(response.data.email);
+      router.push("/");
+    },
+    (error) => {
+      console.error("로그인 실패", error);
+      alert("아이디 혹은 비밀번호를 다시 확인해주세요");
+    }
+  );
+
 
 };
 
 const navigateJoin = () => {
-  router.push('/join');
+  router.push("/join");
 };
-
-
 </script>
 
 <style scoped>
-
 .container {
   display: flex;
   flex-direction: column;
