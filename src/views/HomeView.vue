@@ -5,7 +5,7 @@
         <span>일일 퀘스트</span>
       </div>
       <!-- <Carousel :quests="quests" /> -->
-      <Carousel v-if="quests.length > 0" :quests="quests" />
+      <Carousel v-if="quests.length > 0" :quests="quests" @onImageClick = "handleQuestClick"/>
 
     </div>
     <div class="search-container">
@@ -120,6 +120,10 @@ const handleSearch = () => {
 const handleAttraction = (attraction) => {
   console.log(attraction, "넘겨준다")
 };
+
+const handleQuestClick = (id) => {
+  router.push(`/quest/${id}`);
+}
 </script>
 
 <style scoped>

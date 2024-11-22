@@ -4,8 +4,7 @@
 
     <div class="carousel">
       <div class="carousel-item" v-for="(item, index) in visibleImages" :key="index">
-        <img :src="item.img" alt="carousel image" class="carousel-image" />
-        
+        <img :src="item.img" alt="carousel image" class="carousel-image" @click="handleImageClick(item.id)" />
       </div>
     </div>
     <button @click="next" class="carousel-button next">›</button>
@@ -22,6 +21,8 @@ const props = defineProps({
     required: true,
   }
 })
+
+const emit = defineEmits();
 
 const data = ref([]);
 data.value = props.quests;
@@ -51,6 +52,10 @@ const next = () => {
 const updateVisibleImages = () => {
   visibleImages.value = data.value.slice(currentIndex.value, currentIndex.value + 3);
 };
+
+const handleImageClick = (item) => {
+  emit('onImageClick', item);
+}
 </script>
 
 <style scoped>
@@ -84,6 +89,7 @@ const updateVisibleImages = () => {
   aspect-ratio: 1/1;
   object-fit: cover;
   border-radius: 0.75rem;
+  cursor: pointer;
 }
 
 .carousel-button {
