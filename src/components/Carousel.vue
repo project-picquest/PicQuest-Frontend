@@ -5,6 +5,7 @@
     <div class="carousel">
       <div class="carousel-item" v-for="(image, index) in visibleImages" :key="index">
         <img :src="image" alt="carousel image" class="carousel-image" />
+        
       </div>
     </div>
     <button @click="next" class="carousel-button next">›</button>
@@ -77,7 +78,7 @@ const updateVisibleImages = () => {
 
 .carousel-image {
   width: 100%;
-  height: 100%;
+  aspect-ratio: 1/1;
   object-fit: cover;
   border-radius: 0.75rem;
 }
