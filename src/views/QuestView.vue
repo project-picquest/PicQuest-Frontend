@@ -44,7 +44,7 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import feather from "feather-icons";
-import { _postImage } from "@/api";
+import { _getQuestDetail, _postImage } from "@/api";
 
 const title = ref("");
 const uploadedImageUrl = ref(null);

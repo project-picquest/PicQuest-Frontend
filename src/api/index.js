@@ -27,6 +27,12 @@ const _getQuests = (param, success, fail) => {
     .catch(fail);
 }
 
+const _getQuestDetail = (index, success, fail) => {
+    local.get(`/quests/${index}`)
+    .then(success)
+    .catch(fail);
+}
+
 const _getAttractions = (success, fail) => {
     local.get('/attractions')
     .then(success)
@@ -45,4 +51,4 @@ const _postImage = (param, success, fail) => {
     .catch(fail)
 }
 
-export {_login, _join, _postQuest, _getQuests, _getAttractions, _getAttractionsByTitle, _postImage};
+export {_login, _join, _postQuest, _getQuests, _getQuestDetail, _getAttractions, _getAttractionsByTitle, _postImage};
