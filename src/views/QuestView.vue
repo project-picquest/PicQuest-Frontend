@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="image-container">
-      <img src="https://picsum.photos/600/600" />
+      <img src="https://picsum.photos/600/600.jpg" />
     </div>
 
     <form @submit.prevent="handleSubmit" class="main-container">
@@ -27,14 +27,14 @@
           <span>관광지 사진 등록하기</span>
         </div>
         <div @click="handleClick" class="picture-input-box">
-          <input
-            type="file"
-            ref="inputRef"
-            @change="handleFileUpload"
-            accept="image/*"
+          <input type="file" ref="inputRef" @change="handleFileUpload" accept="image/*" />
+          <img
+            v-show="uploadedImageUrl"
+            class="uploaded-image"
+            :src="uploadedImageUrl"
+            alt=""
           />
-          <img v-show="uploadedImageUrl" class="uploaded-image" :src="uploadedImageUrl" alt="" />
-          <div v-show="!uploadedImageUrl"><i  data-feather="plus" class="icon"></i></div>
+          <div v-show="!uploadedImageUrl"><i data-feather="plus" class="icon"></i></div>
         </div>
       </div>
       <button type="submit" class="submit-button">제출하기</button>
@@ -43,9 +43,10 @@
 </template>
 <script setup>
 import { onMounted, ref } from "vue";
-import  feather  from "feather-icons";
+import feather from "feather-icons";
+import { _postImage } from "@/api";
 
-const title = ref('');
+const title = ref("");
 const uploadedImageUrl = ref(null);
 const inputRef = ref(null);
 
@@ -76,17 +77,51 @@ const handleFileUpload = (e) => {
 
 const handleClick = () => {
   inputRef.value.click();
-}
+};
 
 const handleSubmit = () => {
+  // const requestData = {
+  //   title : title.value,
+  //   uploadedImageUrl : uploadedImageUrl.value,
+  // }
+
   const requestData = {
-    title : title.value,
-    uploadedImageUrl : uploadedImageUrl.value,
-  }
+    first_image: "http://tong.visitkorea.or.kr/cms/resource/09/3303909_image2_1.jpg",
+    second_image: "http://tong.visitkorea.or.kr/cms/resource/09/3303909_image2_1.jpg",
+  };
 
-  console.log(requestData)
-}
+  const formData = new FormData();
 
+  const addImageToFormData = (imageUrl, formData, fieldName) => {
+    return fetch(imageUrl)
+      .then((response) => response.blob()) 
+      .then((blob) => {
+        const file = new File([blob], fieldName + ".jpg", { type: "image/jpeg" });
+        formData.append(fieldName, file); 
+      })
+      .catch((error) => {
+        console.error("이미지 로드 실패:", error);
+      });
+  };
+
+  addImageToFormData(requestData.first_image, formData, "first_image")
+    .then(() => {
+      return addImageToFormData(requestData.second_image, formData, "second_image");
+    })
+    .then(() => {
+      _postImage(
+        formData,
+        (response) => {
+          console.log("파이썬 서버에 전송 성공");
+          console.log(response);
+        },
+        (error) => {
+          console.error("파이썬 서버에 전송 실패", error);
+        }
+      );
+    });
+
+};
 </script>
 <style scoped>
 .container {
@@ -214,6 +249,6 @@ const handleSubmit = () => {
   width: 5rem;
   height: 5rem;
   stroke-width: 0.05rem;
-  stroke: #d9d9d9
+  stroke: #d9d9d9;
 }
 </style>
