@@ -1,6 +1,7 @@
-import {localAxios} from "@/util/http-commons"
+import {localAxios, localAxios_py} from "@/util/http-commons"
 
 const local = localAxios();
+const local_py = localAxios_py();
 
 const _login = (param, success, fail ) => {
     local.post('/user/login', param)
@@ -20,6 +21,12 @@ const _postQuest = (param, success, fail) => {
     .catch(fail)
 }
 
+const _getQuests = (param, success, fail) => {
+    local.post('/quests', param)
+    .then(success)
+    .catch(fail);
+}
+
 const _getAttractions = (success, fail) => {
     local.get('/attractions')
     .then(success)
@@ -32,4 +39,10 @@ const _getAttractionsByTitle = (title, success, fail) => {
     .catch(fail)
 }
 
-export {_login, _join, _postQuest, _getAttractions, _getAttractionsByTitle};
+const _postImage = (param, success, fail) => {
+    local_py.post(`/submitimage`, param)
+    .then(success)
+    .catch(fail)
+}
+
+export {_login, _join, _postQuest, _getQuests, _getAttractions, _getAttractionsByTitle, _postImage};
