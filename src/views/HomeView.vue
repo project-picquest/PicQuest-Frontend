@@ -8,28 +8,35 @@
     </div>
     <div class="search-container">
       <div class="title-box">
-        <span>여행지를 검색해보세요</span>
+        <span>국내 여행지</span>
       </div>
       <div class="input-container">
-        <div class="input-box">
+        <form @submit.prevent="handleSearch" class="input-box">
           <input
             class="attraction-input"
-            type="email"
-            id="email"
-            v-model="email"
-            placeholder="abc@picquest.co.kr"
+            type="text"
+            id="title"
+            v-model="searchTitle"
+            placeholder="여행지를 검색해보세요"
           />
           <i data-feather="search" class="icon"></i>
-          <button>검색</button>
-        </div>
+          <button type="submit">검색</button>
+        </form>
       </div>
 
       <div class="card-container">
         <div class="image-grid">
           <div class="image-item" v-for="(attraction, index) in attractions" :key="index">
-            
-            <img :src="attraction.firstImage1 && attraction.firstImage1 ? attraction.firstImage1 : noImage" alt="attraction-image" class="image" />
-            <div class="image-overlay">
+            <img
+              :src="
+                attraction.firstImage1 && attraction.firstImage1
+                  ? attraction.firstImage1
+                  : noImage
+              "
+              alt="attraction-image"
+              class="image"
+            />
+            <div class="image-overlay" @click="handleAttraction(attraction)">
               <div class="overlay-text title">{{ attraction.title }}</div>
               <div class="overlay-text address">{{ attraction.addr1 }}</div>
             </div>
@@ -41,14 +48,16 @@
 </template>
 
 <script setup>
-import { _getAttractions } from "@/api";
+import { _getAttractions, _getAttractionsByTitle } from "@/api";
 import Carousel from "@/components/Carousel.vue";
 import feather from "feather-icons";
 import { onMounted, ref } from "vue";
-import noImage from '@/assets/no-image.jpg'
+import noImage from "@/assets/no-image.jpg";
+import { useRouter } from "vue-router";
 
-
+const router = useRouter();
 const attractions = ref([]);
+const searchTitle = ref("");
 
 onMounted(() => {
   feather.replace();
@@ -56,26 +65,44 @@ onMounted(() => {
 });
 
 const getAttractions = () => {
-  _getAttractions((response) => {
-    console.log(response.data);
-    attractions.value = response.data;
-  }, (error) => {
-    console.error('_getAttractions 실패', error)
-  })
-} 
+  _getAttractions(
+    (response) => {
+      console.log(response.data);
+      attractions.value = response.data;
+    },
+    (error) => {
+      console.error("_getAttractions 실패", error);
+    }
+  );
+};
 
+const handleSearch = () => {
+  if (searchTitle.value) {
+    _getAttractionsByTitle(
+      searchTitle.value,
+      (response) => {
+        attractions.value = response.data;
+      },
+      (error) => {
+        console.error("_getAttractionsByTitle 실패", error);
+      }
+    );
+  } else {
+    _getAttractions(
+      (response) => {
+        console.log(response.data);
+        attractions.value = response.data;
+      },
+      (error) => {
+        console.error("_getAttractions 실패", error);
+      }
+    );
+  }
+};
 
-const images = [
-  "https://cdn.vuetifyjs.com/images/cards/docks.jpg",
-  "https://cdn.vuetifyjs.com/images/cards/hotel.jpg",
-  "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
-  "https://cdn.vuetifyjs.com/images/cards/nature.jpg",
-  "https://cdn.vuetifyjs.com/images/cards/plane.jpg",
-  "https://cdn.vuetifyjs.com/images/cards/road.jpg",
-  "https://cdn.vuetifyjs.com/images/cards/desert.jpg",
-  "https://cdn.vuetifyjs.com/images/cards/mountain.jpg",
-  "https://cdn.vuetifyjs.com/images/cards/plane.jpg",
-];
+const handleAttraction = (attraction) => {
+  console.log(attraction, "넘겨준다")
+};
 </script>
 
 <style scoped>
@@ -94,7 +121,7 @@ const images = [
 
 .quest-container {
   /* flex-basis: 50%; */
-  flex: 0 1 35%;
+  height: 14rem;
   width: 38rem;
   /* background-color: blue; */
 }
@@ -121,7 +148,7 @@ const images = [
   flex: 1;
   /* align-items: center; */
   width: 38rem;
-  margin-top : 2.5rem;
+  margin-top: 2.5rem;
   margin-bottom: 1rem;
   /* background-color: yellow; */
 }
@@ -170,34 +197,37 @@ const images = [
 }
 
 .card-container {
-  margin : 1rem 0;
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
 }
 
 .image-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem; 
-  justify-content: center; 
+  gap: 1rem;
+  justify-content: flex-start;
+  width: 37rem;
+  /* background-color: green; */
 }
 
 .image-item {
   position: relative;
-  width: 30%; 
-  height: 200px; 
+  width: 31.4%;
+  aspect-ratio: 1/1;
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 0.5rem;
-  overflow: hidden; 
+  overflow: hidden;
   cursor: pointer;
 }
 
 .image {
   width: 100%;
   height: 100%;
-  object-fit: cover; 
+  object-fit: cover;
 }
-
 
 .image-overlay {
   position: absolute;
@@ -210,13 +240,13 @@ const images = [
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding : 1rem;
-  opacity: 0; 
-  transition: opacity 0.3s ease; 
+  padding: 1rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .image-item:hover .image-overlay {
-  opacity: 1; 
+  opacity: 1;
 }
 
 .overlay-text {
