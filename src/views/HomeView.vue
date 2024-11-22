@@ -26,11 +26,12 @@
 
       <div class="card-container">
         <div class="image-grid">
-          <div class="image-item" v-for="(image, index) in images" :key="index">
-            <img :src="image" alt="image" class="image" />
+          <div class="image-item" v-for="(attraction, index) in attractions" :key="index">
+            
+            <img :src="attraction.firstImage1 && attraction.firstImage1 ? attraction.firstImage1 : noImage" alt="attraction-image" class="image" />
             <div class="image-overlay">
-              <div class="overlay-text title">석굴암</div>
-              <div class="overlay-text address">경상북도 경주시 불국로 873-243</div>
+              <div class="overlay-text title">{{ attraction.title }}</div>
+              <div class="overlay-text address">{{ attraction.addr1 }}</div>
             </div>
           </div>
         </div>
@@ -40,13 +41,29 @@
 </template>
 
 <script setup>
+import { _getAttractions } from "@/api";
 import Carousel from "@/components/Carousel.vue";
 import feather from "feather-icons";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
+import noImage from '@/assets/no-image.jpg'
+
+
+const attractions = ref([]);
 
 onMounted(() => {
   feather.replace();
+  getAttractions();
 });
+
+const getAttractions = () => {
+  _getAttractions((response) => {
+    console.log(response.data);
+    attractions.value = response.data;
+  }, (error) => {
+    console.error('_getAttractions 실패', error)
+  })
+} 
+
 
 const images = [
   "https://cdn.vuetifyjs.com/images/cards/docks.jpg",
@@ -193,6 +210,7 @@ const images = [
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding : 1rem;
   opacity: 0; 
   transition: opacity 0.3s ease; 
 }

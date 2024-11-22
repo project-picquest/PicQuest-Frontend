@@ -32,4 +32,4 @@ const _getAttractionsByTitle = (title, success, fail) => {
     .catch(fail)
 }
 
-export {_login, _join, _questSubmit, _postQuest, _getAttractions, _getAttractionsByTitle};
+export {_login, _join, _postQuest, _getAttractions, _getAttractionsByTitle};
