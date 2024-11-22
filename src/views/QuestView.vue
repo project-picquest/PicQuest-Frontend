@@ -4,7 +4,7 @@
       <img src="https://picsum.photos/600/600" />
     </div>
 
-    <div class="main-container">
+    <form @submit.prevent="handleSubmit" class="main-container">
       <div class="title-container">
         <div class="title-box">
           <span>관광지 이름 입력하기</span>
@@ -13,12 +13,11 @@
           <div class="input-box">
             <input
               class="login-input"
-              type="email"
-              id="email"
-              v-model="email"
-              placeholder="abc@picquest.co.kr"
+              type="text"
+              id="title"
+              v-model="title"
+              placeholder="ex) 석굴암"
             />
-            <button>저장</button>
           </div>
         </div>
       </div>
@@ -27,13 +26,68 @@
         <div class="title-box">
           <span>관광지 사진 등록하기</span>
         </div>
-        <div class="picture-input-box"></div>
+        <div @click="handleClick" class="picture-input-box">
+          <input
+            type="file"
+            ref="inputRef"
+            @change="handleFileUpload"
+            accept="image/*"
+          />
+          <img v-show="uploadedImageUrl" class="uploaded-image" :src="uploadedImageUrl" alt="" />
+          <div v-show="!uploadedImageUrl"><i  data-feather="plus" class="icon"></i></div>
+        </div>
       </div>
-      <button class="submit-button">제출하기</button>
-    </div>
+      <button type="submit" class="submit-button">제출하기</button>
+    </form>
   </div>
 </template>
-<script></script>
+<script setup>
+import { onMounted, ref } from "vue";
+import  feather  from "feather-icons";
+
+const title = ref('');
+const uploadedImageUrl = ref(null);
+const inputRef = ref(null);
+
+onMounted(() => {
+  feather.replace();
+});
+
+const isFileImage = (file) => {
+  return file && file.type.split("/")[0] === "image";
+};
+
+const handleFileUpload = (e) => {
+  const file = e.target.files[0];
+  if (!isFileImage(file)) {
+    // TODO: 왜 파일만 올라가지
+    alert("이미지만 업로드 가능합니다.");
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    uploadedImageUrl.value = reader.result;
+  };
+  reader.readAsDataURL(file);
+
+  console.log(uploadedImageUrl.value);
+};
+
+const handleClick = () => {
+  inputRef.value.click();
+}
+
+const handleSubmit = () => {
+  const requestData = {
+    title : title.value,
+    uploadedImageUrl : uploadedImageUrl.value,
+  }
+
+  console.log(requestData)
+}
+
+</script>
 <style scoped>
 .container {
   /* background-color: green; */
@@ -45,7 +99,7 @@
 }
 
 .container::-webkit-scrollbar {
-  display:none;
+  display: none;
 }
 
 .image-container {
@@ -95,8 +149,6 @@
   border-radius: 10px;
 }
 
-
-
 .title-box {
   margin-left: 1rem;
   margin-bottom: 0.3rem;
@@ -134,16 +186,34 @@
   margin-bottom: 1rem;
 }
 
-
 .picture-input-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-grow: 1;
   width: 30%;
-  padding-top: 30%;
+  aspect-ratio: 1/1;
   border-radius: 1rem;
   border: 2px solid #d9d9d9;
-  /* background-color: yellow; */
-  margin-left : 0.5rem;
+  margin-left: 0.5rem;
+  overflow: hidden;
+  cursor: pointer;
 }
 
+.picture-input-box input {
+  display: none;
+}
 
+.uploaded-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.icon {
+  width: 5rem;
+  height: 5rem;
+  stroke-width: 0.05rem;
+  stroke: #d9d9d9
+}
 </style>
