@@ -1,8 +1,18 @@
 <template>
   <div class="container">
-    <div class="image-container">
-      <img src="https://picsum.photos/600/600.jpg" />
+    <div class="quest_info-box">
+      <span
+        >{{ questInfo.date.split('-')[0] }}년
+        {{ questInfo.date.split('-')[1] }}월
+        {{ questInfo.date.split('-')[2] }}일 오늘의 퀘스트</span
+      >
     </div>
+    <div class="image-container">
+      <img :src="questInfo.img" />
+    </div>
+    <p class="guide-text">
+      위 관광지 사진을 보고 이름과 사진을 제출하여 방문을 인증하세요
+    </p>
 
     <form @submit.prevent="handleSubmit" class="main-container">
       <div class="title-container">
@@ -27,14 +37,21 @@
           <span>관광지 사진 등록하기</span>
         </div>
         <div @click="handleClick" class="picture-input-box">
-          <input type="file" ref="inputRef" @change="handleFileUpload" accept="image/*" />
+          <input
+            type="file"
+            ref="inputRef"
+            @change="handleFileUpload"
+            accept="image/*"
+          />
           <img
             v-show="uploadedImageUrl"
             class="uploaded-image"
             :src="uploadedImageUrl"
             alt=""
           />
-          <div v-show="!uploadedImageUrl"><i data-feather="plus" class="icon"></i></div>
+          <div v-show="!uploadedImageUrl">
+            <i data-feather="plus" class="icon"></i>
+          </div>
         </div>
       </div>
       <button type="submit" class="submit-button">제출하기</button>
@@ -42,27 +59,50 @@
   </div>
 </template>
 <script setup>
-import { onMounted, ref } from "vue";
-import feather from "feather-icons";
-import { _getQuestDetail, _postImage } from "@/api";
+import { onMounted, ref } from 'vue';
+import feather from 'feather-icons';
+import { _getQuestDetail, _postImage } from '@/api';
+import { useRoute } from 'vue-router';
 
-const title = ref("");
+const title = ref('');
+// TODO: api 켜지면 빈 문자열로 변경
+const questInfo = ref({
+  id: 0,
+  date: '2024-11-23',
+  img: 'https://picsum.photos/600/600',
+});
 const uploadedImageUrl = ref(null);
 const inputRef = ref(null);
+const route = useRoute();
+const questId = route.params.id;
 
 onMounted(() => {
   feather.replace();
+  // TODO: API 연동 후 주석 해제
+  // getQuestDetail(questId);
 });
 
+const getQuestDetail = (questId) => {
+  _getQuestDetail(
+    questId,
+    (response) => {
+      questInfo.value = response.data;
+    },
+    (error) => {
+      console.error('_getQuestDetail 요청 실패', error);
+    }
+  );
+};
+
 const isFileImage = (file) => {
-  return file && file.type.split("/")[0] === "image";
+  return file && file.type.split('/')[0] === 'image';
 };
 
 const handleFileUpload = (e) => {
   const file = e.target.files[0];
   if (!isFileImage(file)) {
     // TODO: 왜 파일만 올라가지
-    alert("이미지만 업로드 가능합니다.");
+    alert('이미지만 업로드 가능합니다.');
     return;
   }
 
@@ -86,41 +126,48 @@ const handleSubmit = () => {
   // }
 
   const requestData = {
-    first_image: "http://tong.visitkorea.or.kr/cms/resource/09/3303909_image2_1.jpg",
-    second_image: "http://tong.visitkorea.or.kr/cms/resource/09/3303909_image2_1.jpg",
+    first_image:
+      'http://tong.visitkorea.or.kr/cms/resource/09/3303909_image2_1.jpg',
+    second_image:
+      'http://tong.visitkorea.or.kr/cms/resource/09/3303909_image2_1.jpg',
   };
 
   const formData = new FormData();
 
   const addImageToFormData = (imageUrl, formData, fieldName) => {
     return fetch(imageUrl)
-      .then((response) => response.blob()) 
+      .then((response) => response.blob())
       .then((blob) => {
-        const file = new File([blob], fieldName + ".jpg", { type: "image/jpeg" });
-        formData.append(fieldName, file); 
+        const file = new File([blob], fieldName + '.jpg', {
+          type: 'image/jpeg',
+        });
+        formData.append(fieldName, file);
       })
       .catch((error) => {
-        console.error("이미지 로드 실패:", error);
+        console.error('이미지 로드 실패:', error);
       });
   };
 
-  addImageToFormData(requestData.first_image, formData, "first_image")
+  addImageToFormData(requestData.first_image, formData, 'first_image')
     .then(() => {
-      return addImageToFormData(requestData.second_image, formData, "second_image");
+      return addImageToFormData(
+        requestData.second_image,
+        formData,
+        'second_image'
+      );
     })
     .then(() => {
       _postImage(
         formData,
         (response) => {
-          console.log("파이썬 서버에 전송 성공");
+          console.log('파이썬 서버에 전송 성공');
           console.log(response);
         },
         (error) => {
-          console.error("파이썬 서버에 전송 실패", error);
+          console.error('파이썬 서버에 전송 실패', error);
         }
       );
     });
-
 };
 </script>
 <style scoped>
@@ -133,6 +180,18 @@ const handleSubmit = () => {
   overflow-y: auto;
 }
 
+.quest_info-box {
+  width: 38rem;
+  padding-left: 1rem;
+  margin-top: 1.5rem;
+  /* height: 10rem; */
+  /* background-color: yellow; */
+}
+.quest_info-box span {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
 .container::-webkit-scrollbar {
   display: none;
 }
@@ -140,9 +199,9 @@ const handleSubmit = () => {
 .image-container {
   width: 38rem;
   height: 40rem;
-  border-radius: 2rem; /* 컨테이너 둥글게 */
+  border-radius: 1rem; /* 컨테이너 둥글게 */
   overflow: hidden; /* 컨테이너 밖 이미지 잘리도록 설정 */
-  margin-top: 1.5rem;
+  margin: 1rem 0 0.3rem 0;
   flex-shrink: 0;
 }
 
@@ -150,6 +209,12 @@ const handleSubmit = () => {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.guide-text {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: #777777;
 }
 
 .input-container {
