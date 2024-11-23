@@ -7,7 +7,7 @@ export const useQuestState = defineStore('questState', {
     questSimilarity: 0,
   }),
   actions: {
-    setQuestInfo(questId, score) {
+    setQuestInfo(questId, title, score) {
       this.questId = questId;
       this.questAttractionName = title;
       this.questSimilarity = score;
