@@ -9,14 +9,70 @@
       <ImageSlider />
 
       <v-divider style="margin: 1.8rem 0"></v-divider>
-      <UserSlider />
+      <UserSlider :nickname="userInfo.nickname" :score="userInfo.score" />
     </div>
     <button class="submit-button">나의 정보 보러가기</button>
   </div>
 </template>
 <script setup>
-import ImageSlider from "@/components/ImageSlider.vue";
-import UserSlider from "@/components/UserSlider.vue";
+import ImageSlider from '@/components/ImageSlider.vue';
+import UserSlider from '@/components/UserSlider.vue';
+import { useRoute } from 'vue-router';
+import { useLoginState } from '@/stores/loginState';
+import { useQuestState } from '@/stores/questState';
+import { onMounted, ref } from 'vue';
+import { _getQuestDetail, _getUserProfile } from '@/api';
+
+const route = useRoute();
+const loginState = useLoginState();
+const questId = route.params.id;
+// TODO: API 연동되면 빈 문자열로 변경
+const questInfo = ref({
+  id: 1,
+  date: '2024-11-23',
+  img: 'https://picsum.photos/600/600',
+  similarity: 0,
+});
+
+const userInfo = ref({ nickname: 'test', score: 70 });
+onMounted(() => {
+  // TODO: API 연동되면 주석 해제
+  // getQuestInfo();
+  // getUserInfo();
+});
+
+const getQuestInfo = () => {
+  _getQuestDetail(
+    questId,
+    (response) => {
+      questInfo.value = { ...response.data, similarity: 0 };
+    },
+    (error) => {
+      console.error('_getQuestDetail API 실패', error);
+    }
+  );
+
+  const questState = useQuestState();
+  const questSimilarity = questState.questSimilarity;
+  questInfo.value = { ...questInfo.value, similarity: questSimilarity };
+};
+
+const getUserInfo = () => {
+  const requestParam = { email: loginState.isLogin ? loginState.email : null };
+  // TODO: 등급 post에 대한 회의 필요
+  // TODO: 프로필 이미지가 없음 현재
+
+  _getUserProfile(
+    loginState.email,
+    requestParam,
+    (response) => {
+      userInfo.value = response.data;
+    },
+    (error) => {
+      console.error('_getUserProfile API 실패', error);
+    }
+  );
+};
 </script>
 <style scoped>
 .container {
