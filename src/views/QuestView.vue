@@ -62,18 +62,19 @@
 import { onMounted, ref } from 'vue';
 import feather from 'feather-icons';
 import { _getQuestDetail, _postImage } from '@/api';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
-const title = ref('');
 // TODO: api 켜지면 빈 문자열로 변경
 const questInfo = ref({
   id: 0,
   date: '2024-11-23',
   img: 'https://picsum.photos/600/600',
 });
+const title = ref('');
 const uploadedImageUrl = ref(null);
 const inputRef = ref(null);
 const route = useRoute();
+const router = useRouter();
 const questId = route.params.id;
 
 onMounted(() => {
@@ -82,6 +83,7 @@ onMounted(() => {
   // getQuestDetail(questId);
 });
 
+// API
 const getQuestDetail = (questId) => {
   _getQuestDetail(
     questId,
@@ -94,31 +96,33 @@ const getQuestDetail = (questId) => {
   );
 };
 
+// FILE UPLOAD
 const isFileImage = (file) => {
   return file && file.type.split('/')[0] === 'image';
-};
-
-const handleFileUpload = (e) => {
-  const file = e.target.files[0];
-  if (!isFileImage(file)) {
-    // TODO: 왜 파일만 올라가지
-    alert('이미지만 업로드 가능합니다.');
-    return;
-  }
-
-  const reader = new FileReader();
-  reader.onload = () => {
-    uploadedImageUrl.value = reader.result;
-  };
-  reader.readAsDataURL(file);
-
-  console.log(uploadedImageUrl.value);
 };
 
 const handleClick = () => {
   inputRef.value.click();
 };
 
+const handleFileUpload = (e) => {
+  const $input = e.target;
+  const file = $input.files[0];
+  if (!isFileImage(file)) {
+    // TODO: 실행 순서 이상함
+    alert('이미지만 업로드 가능합니다.');
+    $input.value = '';
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = () => {
+    uploadedImageUrl.value = reader.result;
+  };
+  reader.readAsDataURL(file);
+  console.log(uploadedImageUrl.value);
+};
+
+// SUBMIT, FILE ENCODING
 const handleSubmit = () => {
   // const requestData = {
   //   title : title.value,
@@ -162,6 +166,12 @@ const handleSubmit = () => {
         (response) => {
           console.log('파이썬 서버에 전송 성공');
           console.log(response);
+          // TODO:
+          if (유사도 > 0.9) {
+            router.push(`/result/success/${questId}`);
+          } else {
+            router.push(`/result/fail/${questId}`);
+          }
         },
         (error) => {
           console.error('파이썬 서버에 전송 실패', error);
