@@ -16,7 +16,9 @@
     <div class="level-container">
       <p>여행레벨</p>
       <div>
-        <div class="profile-root-bar"><div class="profile-level-bar"></div></div>
+        <div class="profile-root-bar">
+          <div class="profile-level-bar"></div>
+        </div>
       </div>
     </div>
     <div class="quest-container">
@@ -31,7 +33,41 @@
 </template>
 
 <script setup>
-import ImageSlider from '@/components/ImageSlider.vue'
+import { _getUserProfile } from '@/api';
+import ImageSlider from '@/components/ImageSlider.vue';
+
+import { useRoute } from 'vue-router';
+import { useLoginState } from '@/stores/loginState';
+import { onMounted, ref } from 'vue';
+
+const route = useRoute();
+const email = route.params.email;
+const loginState = useLoginState();
+// TODO: api연동 후 데이터 프로퍼티에 따라 달라져야 함
+const userInfo = ref({
+  nickname: 'test',
+  score: 70,
+});
+
+onMounted(() => {
+  // TODO: api 연동 후 주석 해제
+  // getUserInfo();
+});
+
+// TODO: api연동 후 데이터 프로퍼티에 따라 ref 로직 달라질 수 있음
+const getUserInfo = () => {
+  const requestParam = { email: loginState.isLogin ? loginState.email : null };
+  _getUserProfile(
+    email,
+    requestParam,
+    (response) => {
+      userInfo.value = response.data;
+    },
+    (error) => {
+      console.error('_getUserProfile API 요청 실패', error);
+    }
+  );
+};
 </script>
 
 <style scoped>
@@ -144,10 +180,10 @@ import ImageSlider from '@/components/ImageSlider.vue'
 }
 
 .quest-box {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 0.5rem;
 }
 
 @keyframes fillLevel {
