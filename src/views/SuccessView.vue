@@ -11,19 +11,23 @@
       <v-divider style="margin: 1.8rem 0"></v-divider>
       <UserSlider :nickname="userInfo.nickname" :score="userInfo.score" />
     </div>
-    <button class="submit-button">나의 정보 보러가기</button>
+    <button @click="navigateProfile" class="submit-button">
+      나의 정보 보러가기
+    </button>
   </div>
 </template>
 <script setup>
 import ImageSlider from '@/components/ImageSlider.vue';
 import UserSlider from '@/components/UserSlider.vue';
 import { useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { useLoginState } from '@/stores/loginState';
 import { useQuestState } from '@/stores/questState';
 import { onMounted, ref } from 'vue';
 import { _getQuestDetail, _getUserProfile } from '@/api';
 
 const route = useRoute();
+const router = useRouter();
 const loginState = useLoginState();
 const questId = route.params.id;
 // TODO: API 연동되면 빈 문자열로 변경
@@ -72,6 +76,11 @@ const getUserInfo = () => {
       console.error('_getUserProfile API 실패', error);
     }
   );
+};
+
+const navigateProfile = () => {
+  const email = loginState.email;
+  router.push(`/profile/${email}`);
 };
 </script>
 <style scoped>
