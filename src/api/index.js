@@ -31,6 +31,10 @@ const _getAttractionsByTitle = (title, success, fail) => {
   local.get(`/attractions/${title}`).then(success).catch(fail);
 };
 
+const _getAttractionDetail = (num, success, fail) => {
+  local.get(`/attractions/detail/${num}`).then(success).catch(fail);
+};
+
 const _postImage = (param, success, fail) => {
   local_py.post(`/submitimage`, param).then(success).catch(fail);
 };
@@ -47,6 +51,7 @@ export {
   _getQuestDetail,
   _getAttractions,
   _getAttractionsByTitle,
+  _getAttractionDetail,
   _postImage,
   _getUserProfile,
 };
