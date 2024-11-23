@@ -166,7 +166,7 @@ const handleSubmit = () => {
         (response) => {
           console.log('파이썬 서버에 전송 성공');
           console.log(response);
-          // TODO:
+          // TODO: 실제 받는 데이터 활용
           if (유사도 > 0.9) {
             router.push(`/result/success/${questId}`);
           } else {
