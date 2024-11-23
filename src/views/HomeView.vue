@@ -45,7 +45,7 @@
               alt="attraction-image"
               class="image"
             />
-            <div class="image-overlay" @click="handleAttraction(attraction)">
+            <div class="image-overlay" @click="handleAttraction(attraction.no)">
               <div class="overlay-text title">{{ attraction.title }}</div>
               <div class="overlay-text address">{{ attraction.addr1 }}</div>
             </div>
@@ -128,8 +128,8 @@ const handleSearch = () => {
   }
 };
 
-const handleAttraction = (attraction) => {
-  console.log(attraction, '넘겨준다');
+const handleAttraction = (num) => {
+  router.push(`/attraction/${num}`);
 };
 
 const handleQuestClick = (id) => {
