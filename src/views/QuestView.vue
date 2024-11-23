@@ -63,6 +63,7 @@ import { onMounted, ref } from 'vue';
 import feather from 'feather-icons';
 import { _getQuestDetail, _postImage } from '@/api';
 import { useRoute, useRouter } from 'vue-router';
+import { useQuestState } from '@/stores/questState';
 
 // TODO: api 켜지면 빈 문자열로 변경
 const questInfo = ref({
@@ -76,6 +77,7 @@ const inputRef = ref(null);
 const route = useRoute();
 const router = useRouter();
 const questId = route.params.id;
+const questState = useQuestState();
 
 onMounted(() => {
   feather.replace();
@@ -166,6 +168,9 @@ const handleSubmit = () => {
         (response) => {
           console.log('파이썬 서버에 전송 성공');
           console.log(response);
+
+          questState.setQuestInfo(questId, title.value, response.data.유사도);
+
           // TODO: 실제 받는 데이터 활용
           if (유사도 > 0.9) {
             router.push(`/result/success/${questId}`);
