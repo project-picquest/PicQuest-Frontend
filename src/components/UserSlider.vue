@@ -7,20 +7,25 @@
     </div>
     <div class="center-container">
       <div class="text-box">
-        <span>hellosonic</span>
+        <span>{{ props.nickname }}</span>
       </div>
       <div>
         <div class="root-bar"><div class="level-bar"></div></div>
       </div>
     </div>
     <div class="right-container">
-      <span>76</span>
+      <span>{{ props.score }}</span>
       <span> (+20)</span>
     </div>
   </div>
 </template>
 
-<script></script>
+<script setup>
+const props = defineProps({
+  nickname: String,
+  score: Number,
+});
+</script>
 
 <style scoped>
 .container {
@@ -73,7 +78,7 @@
   height: 0.5rem;
   background-color: #f74320;
   border-radius: 3px;
-  animation : fillLevel 1.5s ease-out forwards;
+  animation: fillLevel 1.5s ease-out forwards;
 }
 
 .text-box {
@@ -84,8 +89,6 @@
   font-size: 1.1rem;
   font-weight: 700;
 }
-
-
 
 .right-container {
   width: 3.5rem;
