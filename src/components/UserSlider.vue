@@ -10,7 +10,9 @@
         <span>{{ props.nickname }}</span>
       </div>
       <div>
-        <div class="root-bar"><div class="level-bar"></div></div>
+        <div class="root-bar">
+          <div class="level-bar" :style="{ width: `${widthByScore}%` }"></div>
+        </div>
       </div>
     </div>
     <div class="right-container">
@@ -21,10 +23,27 @@
 </template>
 
 <script setup>
+import { ref, watch, onMounted } from 'vue';
+
 const props = defineProps({
   nickname: String,
   score: Number,
 });
+
+const widthByScore = ref(0);
+
+onMounted(() => {
+  setTimeout(() => {
+    widthByScore.value = props.score;
+  }, 50);
+});
+
+watch(
+  () => props.score,
+  (newScore) => {
+    widthByScore.value = newScore;
+  }
+);
 </script>
 
 <style scoped>
@@ -43,8 +62,8 @@ const props = defineProps({
 .image-container {
   width: 5rem;
   height: 5rem;
-  border-radius: 1rem; /* 컨테이너 둥글게 */
-  overflow: hidden; /* 컨테이너 밖 이미지 잘리도록 설정 */
+  border-radius: 1rem;
+  overflow: hidden;
 }
 
 .image-container img {
@@ -72,13 +91,10 @@ const props = defineProps({
 
 .level-bar {
   position: absolute;
-
-  /* width: 10rem; */
-  width: 77%;
   height: 0.5rem;
   background-color: #f74320;
   border-radius: 3px;
-  animation: fillLevel 1.5s ease-out forwards;
+  transition: width 1.5s ease-out;
 }
 
 .text-box {
@@ -100,14 +116,5 @@ const props = defineProps({
   /* font-size: 1rem; */
   font-weight: 700;
   color: #f74320;
-}
-
-@keyframes fillLevel {
-  0% {
-    width: 0;
-  }
-  100% {
-    width: 77%;
-  }
 }
 </style>
