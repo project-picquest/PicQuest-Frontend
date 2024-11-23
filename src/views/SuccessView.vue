@@ -6,7 +6,11 @@
       <p>입력한 관광지 정보가 일치해요.</p>
     </div>
     <div>
-      <ImageSlider />
+      <ImageSlider
+        :title="questInfo.attractionName"
+        :image="questInfo.img"
+        :score="questInfo.similarity"
+      />
 
       <v-divider style="margin: 1.8rem 0"></v-divider>
       <UserSlider :nickname="userInfo.nickname" :score="userInfo.score" />
@@ -34,8 +38,9 @@ const questId = route.params.id;
 const questInfo = ref({
   id: 1,
   date: '2024-11-23',
+  attractionName: 'test',
   img: 'https://picsum.photos/600/600',
-  similarity: 0,
+  similarity: 80,
 });
 
 const userInfo = ref({ nickname: 'test', score: 70 });
@@ -49,7 +54,7 @@ const getQuestInfo = () => {
   _getQuestDetail(
     questId,
     (response) => {
-      questInfo.value = { ...response.data, similarity: 0 };
+      questInfo.value = { ...response.data, attractionName: '', similarity: 0 };
     },
     (error) => {
       console.error('_getQuestDetail API 실패', error);
@@ -58,7 +63,12 @@ const getQuestInfo = () => {
 
   const questState = useQuestState();
   const questSimilarity = questState.questSimilarity;
-  questInfo.value = { ...questInfo.value, similarity: questSimilarity };
+  const questAttractionName = questState.questAttractionName;
+  questInfo.value = {
+    ...questInfo.value,
+    attractionName: questAttractionName,
+    similarity: questSimilarity,
+  };
 };
 
 const getUserInfo = () => {

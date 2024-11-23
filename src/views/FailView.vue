@@ -6,27 +6,66 @@
       <p>일치하지 않아요</p>
     </div>
     <div>
-      <ImageSlider />
-
+      <ImageSlider
+        :title="questInfo.attractionName"
+        :image="questInfo.img"
+        :score="questInfo.similarity"
+      />
     </div>
     <button @click="navigateQuest(id)" class="submit-button">재도전하기</button>
   </div>
 </template>
+
 <script setup>
-import { useRouter, useRoute } from "vue-router";
-import ImageSlider from "@/components/ImageSlider.vue";
+import { useRouter, useRoute } from 'vue-router';
+import ImageSlider from '@/components/ImageSlider.vue';
+import { onMounted, ref } from 'vue';
+import { useQuestState } from '@/stores/questState';
 
 const route = useRoute();
 const router = useRouter();
-
 const id = route.params.id;
 
-const navigateQuest = (id) => {
-  router.push(`/quest/${id}`)
-  console.log('클릭')
-}
+// TODO: API 연동되면 빈 문자열로 변경
+const questInfo = ref({
+  id: 1,
+  date: '2024-11-23',
+  attractionName: 'test',
+  img: 'https://picsum.photos/600/600',
+  similarity: 80,
+});
 
+onMounted(() => {
+  // TODO: API 연동되면 주석 해제
+  // getQuestInfo();
+});
+
+const getQuestInfo = () => {
+  _getQuestDetail(
+    questId,
+    (response) => {
+      questInfo.value = { ...response.data, attractionName: '', similarity: 0 };
+    },
+    (error) => {
+      console.error('_getQuestDetail API 실패', error);
+    }
+  );
+
+  const questState = useQuestState();
+  const questSimilarity = questState.questSimilarity;
+  const questAttractionName = questState.questAttractionName;
+  questInfo.value = {
+    ...questInfo.value,
+    attractionName: questAttractionName,
+    similarity: questSimilarity,
+  };
+};
+const navigateQuest = (id) => {
+  router.push(`/quest/${id}`);
+  console.log('클릭');
+};
 </script>
+
 <style scoped>
 .container {
   display: flex;
@@ -44,7 +83,7 @@ const navigateQuest = (id) => {
 .message-container :nth-child(1) {
   font-size: 4.5rem;
   font-weight: 700;
-  transform: rotate(-10deg)
+  transform: rotate(-10deg);
 }
 .message-container :nth-child(2) {
   font-size: 1.2rem;

@@ -2,12 +2,12 @@
   <div class="container">
     <div class="left-container">
       <div class="image-container">
-        <img src="https://picsum.photos/600/600" />
+        <img :src="props.image" />
       </div>
     </div>
     <div class="center-container">
       <div class="text-box">
-        <span>석굴암</span>
+        <span>{{ props.title }}</span>
         <span>에 대한 유사도 검사</span>
       </div>
       <div>
@@ -15,12 +15,18 @@
       </div>
     </div>
     <div class="right-container">
-      <span>77%</span>
+      <span>{{ props.score }}%</span>
     </div>
   </div>
 </template>
 
-<script></script>
+<script setup>
+const props = defineProps({
+  title: String,
+  image: String,
+  score: Number,
+});
+</script>
 
 <style scoped>
 .container {
@@ -78,7 +84,7 @@
   height: 0.5rem;
   background-color: #f74320;
   border-radius: 3px;
-  animation : fillLevel 1.5s ease-out forwards;
+  animation: fillLevel 1.5s ease-out forwards;
 }
 
 .text-box {
@@ -102,14 +108,13 @@
   width: 2.5rem;
   height: 100%;
   /* background-color: yellow; */
-
 }
 
 .right-container span {
-    position: absolute;
-    top: 3.2rem;
-    font-weight: 700;
-    color: #f74320;
+  position: absolute;
+  top: 3.2rem;
+  font-weight: 700;
+  color: #f74320;
 }
 
 @keyframes fillLevel {

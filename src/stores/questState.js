@@ -3,7 +3,7 @@ import { defineStore } from 'pinia';
 export const useQuestState = defineStore('questState', {
   state: () => ({
     questId: 0,
-    title: '',
+    questAttractionName: '',
     questSimilarity: 0,
   }),
   actions: {
