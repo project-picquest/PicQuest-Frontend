@@ -6,7 +6,7 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      redirect :'/home'
+      redirect: '/home',
     },
     {
       path: '/home',
@@ -30,51 +30,53 @@ const router = createRouter({
       beforeEnter: (to, from, next) => {
         const loginState = useLoginState();
         if (!loginState.isLogin) {
-          alert('로그인 후 이용 가능합니다.')
+          alert('로그인 후 이용 가능합니다.');
           next('/login');
         } else {
           next();
         }
-      } 
+      },
     },
     {
       path: '/attraction/:id',
       name: 'attraction',
-      component: () => import('@/views/AttractionView.vue')
+      component: () => import('@/views/AttractionView.vue'),
     },
     {
       path: '/result',
       name: 'result',
-      children : [{
-        path: 'success/:id',
-        name: 'success',
-        component: () => import('@/views/SuccessView.vue')
-      }, {
-        path: 'fail/:id',
-        name: 'fail',
-        component: () => import('@/views/FailView.vue')
-      }]
+      children: [
+        {
+          path: 'success/:id',
+          name: 'success',
+          component: () => import('@/views/SuccessView.vue'),
+        },
+        {
+          path: 'fail/:id',
+          name: 'fail',
+          component: () => import('@/views/FailView.vue'),
+        },
+      ],
     },
     {
-      path: '/profile/:nickname',
+      path: '/profile/:email',
       name: 'profile',
       component: () => import('@/views/ProfileView.vue'),
       beforeEnter: (to, from, next) => {
         const loginState = useLoginState();
         if (!loginState.isLogin) {
-          alert('로그인 후 이용 가능합니다.')
+          alert('로그인 후 이용 가능합니다.');
           next('/login');
         } else {
           next();
         }
-      } 
-
+      },
     },
     {
       path: '/:catchAll(.*)',
       name: 'error',
-      component: () => import('@/views/ErrorView.vue')
-    }
+      component: () => import('@/views/ErrorView.vue'),
+    },
   ],
 });
 
