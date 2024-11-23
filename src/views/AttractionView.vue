@@ -1,14 +1,16 @@
 <template>
   <div class="container">
     <div class="image-container">
-      <img src="https://picsum.photos/600/600" />
+      <img
+        :src="attractionInfo.firstImage1 ? attractionInfo.firstImage1 : noImage"
+      />
     </div>
 
     <div class="main-container">
       <div class="info-container">
         <div class="title-box">
-          <p>석굴암</p>
-          <p>경상북도 경주시 불국로 873-243</p>
+          <p>{{ attractionInfo.title }}</p>
+          <p>{{ attractionInfo.add1 }} {{ attractionInfo.add2 }}</p>
         </div>
       </div>
       <div class="picture-container">
@@ -24,11 +26,56 @@
         </div>
       </div>
 
-      <button class="submit-button">제출하기</button>
+      <!-- <button class="submit-button">제출하기</button> -->
     </div>
   </div>
 </template>
-<script></script>
+
+<!-- {
+  "no": 3818,
+  "title": "가회동성당",
+  "firstImage1": "http://tong.visitkorea.or.kr/cms/resource/09/3303909_image2_1.jpg",
+  "addr1": "서울특별시 종로구 북촌로 57 (가회동)",
+  "addr2": ""
+}, -->
+
+<script setup>
+import noImage from '@/assets/no-image.jpg';
+import { _getAttractionDetail } from '@/api';
+import { onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+const attractionNum = route.params.id;
+
+// TODO: api 연동 후 빈 문자열로 변경
+const attractionInfo = ref({
+  no: 1,
+  title: '석굴암',
+  firstImage1:
+    'http://tong.visitkorea.or.kr/cms/resource/09/3303909_image2_1.jpg',
+  add1: '서울특별시 종로구 북촌로 57',
+  add2: '(가회동)',
+});
+
+onMounted(() => {
+  // TODO: api 연동 후 주석 삭제
+  // getAttractionInfo();
+});
+
+const getAttractionInfo = () => {
+  _getAttractionDetail(
+    attractionNum,
+    (response) => {
+      attractionInfo.value = response.data;
+    },
+    (error) => {
+      consoele.error('_getAttractionDetail API 요청 실패', error);
+    }
+  );
+};
+</script>
+
 <style scoped>
 .container {
   /* background-color: green; */
@@ -40,7 +87,7 @@
 }
 
 .container::-webkit-scrollbar {
-  display:none;
+  display: none;
 }
 
 .image-container {
