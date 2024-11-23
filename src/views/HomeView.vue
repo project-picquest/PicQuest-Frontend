@@ -5,8 +5,11 @@
         <span>일일 퀘스트</span>
       </div>
       <!-- <Carousel :quests="quests" /> -->
-      <Carousel v-if="quests.length > 0" :quests="quests" @onImageClick = "handleQuestClick"/>
-
+      <Carousel
+        v-if="quests.length > 0"
+        :quests="quests"
+        @onImageClick="handleQuestClick"
+      />
     </div>
     <div class="search-container">
       <div class="title-box">
@@ -28,7 +31,11 @@
 
       <div class="card-container">
         <div class="image-grid">
-          <div class="image-item" v-for="(attraction, index) in attractions" :key="index">
+          <div
+            class="image-item"
+            v-for="(attraction, index) in attractions"
+            :key="index"
+          >
             <img
               :src="
                 attraction.firstImage1 && attraction.firstImage1
@@ -50,19 +57,19 @@
 </template>
 
 <script setup>
-import { _getAttractions, _getAttractionsByTitle, _getQuests } from "@/api";
-import Carousel from "@/components/Carousel.vue";
-import feather from "feather-icons";
-import { onMounted, ref } from "vue";
-import noImage from "@/assets/no-image.jpg";
-import { useRouter } from "vue-router";
-import { useLoginState} from "@/stores/loginState"
+import { _getAttractions, _getAttractionsByTitle, _getQuests } from '@/api';
+import Carousel from '@/components/Carousel.vue';
+import feather from 'feather-icons';
+import { onMounted, ref } from 'vue';
+import noImage from '@/assets/no-image.jpg';
+import { useRouter } from 'vue-router';
+import { useLoginState } from '@/stores/loginState';
 
 const router = useRouter();
 const loginState = useLoginState();
 const quests = ref([]);
 const attractions = ref([]);
-const searchTitle = ref("");
+const searchTitle = ref('');
 
 onMounted(() => {
   feather.replace();
@@ -72,23 +79,27 @@ onMounted(() => {
 
 const getQuests = () => {
   const requestParam = {
-    'email' : loginState.isLogin ? loginState.email : null
-  }
-  _getQuests(requestParam, (response) => {
-    quests.value = response.data;
-  }, (error) => {
-    console.error('_getQuests 실패', error)
-  })
-}
+    email: loginState.isLogin ? loginState.email : null,
+  };
+  _getQuests(
+    requestParam,
+    (response) => {
+      quests.value = response.data;
+    },
+    (error) => {
+      console.error('_getQuests 실패', error);
+    }
+  );
+};
 
 const getAttractions = () => {
   _getAttractions(
     (response) => {
-      console.log(response.data);
+      // console.log(response.data);
       attractions.value = response.data;
     },
     (error) => {
-      console.error("_getAttractions 실패", error);
+      console.error('_getAttractions 실패', error);
     }
   );
 };
@@ -101,7 +112,7 @@ const handleSearch = () => {
         attractions.value = response.data;
       },
       (error) => {
-        console.error("_getAttractionsByTitle 실패", error);
+        console.error('_getAttractionsByTitle 실패', error);
       }
     );
   } else {
@@ -111,19 +122,19 @@ const handleSearch = () => {
         attractions.value = response.data;
       },
       (error) => {
-        console.error("_getAttractions 실패", error);
+        console.error('_getAttractions 실패', error);
       }
     );
   }
 };
 
 const handleAttraction = (attraction) => {
-  console.log(attraction, "넘겨준다")
+  console.log(attraction, '넘겨준다');
 };
 
 const handleQuestClick = (id) => {
   router.push(`/quest/${id}`);
-}
+};
 </script>
 
 <style scoped>
