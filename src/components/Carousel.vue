@@ -3,8 +3,17 @@
     <button @click="prev" class="carousel-button prev">‹</button>
 
     <div class="carousel">
-      <div class="carousel-item" v-for="(item, index) in visibleImages" :key="index">
-        <img :src="item.img" alt="carousel image" class="carousel-image" @click="handleImageClick(item.id)" />
+      <div
+        class="carousel-item"
+        v-for="(item, index) in visibleImages"
+        :key="index"
+      >
+        <img
+          :src="item.img"
+          alt="carousel image"
+          class="carousel-image"
+          @click="handleImageClick(index + 1)"
+        />
       </div>
     </div>
     <button @click="next" class="carousel-button next">›</button>
@@ -12,15 +21,15 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
-import { ref } from "vue";
+import { defineProps } from 'vue';
+import { ref } from 'vue';
 
 const props = defineProps({
-  quests : {
-    type : Array,
+  quests: {
+    type: Array,
     required: true,
-  }
-})
+  },
+});
 
 const emit = defineEmits();
 
@@ -50,12 +59,15 @@ const next = () => {
 };
 
 const updateVisibleImages = () => {
-  visibleImages.value = data.value.slice(currentIndex.value, currentIndex.value + 3);
+  visibleImages.value = data.value.slice(
+    currentIndex.value,
+    currentIndex.value + 3
+  );
 };
 
 const handleImageClick = (item) => {
   emit('onImageClick', item);
-}
+};
 </script>
 
 <style scoped>
@@ -101,13 +113,13 @@ const handleImageClick = (item) => {
   padding-bottom: 0.4rem;
   font-size: 1.75rem;
   cursor: pointer;
-  z-index: 1; 
+  z-index: 1;
   border-radius: 50%;
-  width: 2rem;  
-  height: 2rem; 
+  width: 2rem;
+  height: 2rem;
   display: flex;
-  justify-content: center; 
-  align-items: center; 
+  justify-content: center;
+  align-items: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.12);
 }
 .carousel-button.prev {
