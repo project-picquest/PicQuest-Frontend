@@ -26,7 +26,11 @@
             class="picture-input-box"
           >
             <!-- TODO: 스타일 수정 -->
-            <img :src="photo" :alt="'photo-' + index" />
+            <img
+              :src="photo"
+              :alt="'photo-' + index"
+              class="additional-photo"
+            />
           </div>
         </div>
       </div>
@@ -53,6 +57,7 @@ const attractionInfo = ref({
   addr1: '',
   addr2: '',
   additionalPhotos: [
+    'http://tong.visitkorea.or.kr/cms/resource/09/3303909_image2_1.jpg',
     'http://tong.visitkorea.or.kr/cms/resource/09/3303909_image2_1.jpg',
     'http://tong.visitkorea.or.kr/cms/resource/09/3303909_image2_1.jpg',
     'http://tong.visitkorea.or.kr/cms/resource/09/3303909_image2_1.jpg',
@@ -142,30 +147,44 @@ const getAttractionInfo = () => {
 }
 
 .picture-container {
+  display: flex;
+  flex-direction: column;
+
   flex-grow: 1;
   margin-top: 2rem;
   margin-bottom: 1rem;
+  /* background-color: red; */
+}
+
+.picture-input-container {
+  display: flex;
+  align-self: center;
+  flex-wrap: wrap;
+  justify-content: start;
+  gap: 0.9rem;
+  width: 37rem;
   /* background-color: green; */
 }
 
 .picture-input-box {
-  flex-grow: 1;
-  width: 30%;
-  padding-top: 30%;
+  /* flex-grow: 1; */
+  width: 31.7%;
+  aspect-ratio: 1/1;
   border-radius: 1rem;
   border: 2px solid #d9d9d9;
   /* background-color: yellow; */
-  margin-left: 0.5rem;
+  /* margin-left: 0.5rem; */
+  overflow: hidden;
+}
+.additional-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .info-container {
   width: 38rem;
   display: flex;
-}
-
-.picture-input-container {
-  display: flex;
-  gap: 0.5rem;
 }
 
 .more-pictures-box {
