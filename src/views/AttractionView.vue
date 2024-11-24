@@ -10,7 +10,7 @@
       <div class="info-container">
         <div class="title-box">
           <p>{{ attractionInfo.title }}</p>
-          <p>{{ attractionInfo.add1 }} {{ attractionInfo.add2 }}</p>
+          <p>{{ attractionInfo.addr1 }} {{ attractionInfo.addr2 }}</p>
         </div>
       </div>
       <div class="picture-container">
@@ -20,9 +20,14 @@
 
         <!-- TODO: 슬라이더로 교체 -->
         <div class="picture-input-container">
-          <div class="picture-input-box"></div>
-          <div class="picture-input-box"></div>
-          <div class="picture-input-box"></div>
+          <div
+            v-for="(photo, index) in attractionInfo.additionalPhotos"
+            :key="index"
+            class="picture-input-box"
+          >
+            <!-- TODO: 스타일 수정 -->
+            <img :src="photo" :alt="'photo-' + index" />
+          </div>
         </div>
       </div>
 
@@ -30,14 +35,6 @@
     </div>
   </div>
 </template>
-
-<!-- {
-  "no": 3818,
-  "title": "가회동성당",
-  "firstImage1": "http://tong.visitkorea.or.kr/cms/resource/09/3303909_image2_1.jpg",
-  "addr1": "서울특별시 종로구 북촌로 57 (가회동)",
-  "addr2": ""
-}, -->
 
 <script setup>
 import noImage from '@/assets/no-image.jpg';
@@ -50,17 +47,21 @@ const attractionNum = route.params.id;
 
 // TODO: api 연동 후 빈 문자열로 변경
 const attractionInfo = ref({
-  no: 1,
-  title: '석굴암',
-  firstImage1:
+  no: 0,
+  title: '',
+  firstImage1: '',
+  addr1: '',
+  addr2: '',
+  additionalPhotos: [
     'http://tong.visitkorea.or.kr/cms/resource/09/3303909_image2_1.jpg',
-  add1: '서울특별시 종로구 북촌로 57',
-  add2: '(가회동)',
+    'http://tong.visitkorea.or.kr/cms/resource/09/3303909_image2_1.jpg',
+    'http://tong.visitkorea.or.kr/cms/resource/09/3303909_image2_1.jpg',
+  ],
 });
 
 onMounted(() => {
   // TODO: api 연동 후 주석 삭제
-  // getAttractionInfo();
+  getAttractionInfo();
 });
 
 const getAttractionInfo = () => {
@@ -93,8 +94,8 @@ const getAttractionInfo = () => {
 .image-container {
   width: 38rem;
   height: 40rem;
-  border-radius: 2rem; /* 컨테이너 둥글게 */
-  overflow: hidden; /* 컨테이너 밖 이미지 잘리도록 설정 */
+  border-radius: 2rem;
+  overflow: hidden;
   margin-top: 1.5rem;
   flex-shrink: 0;
 }

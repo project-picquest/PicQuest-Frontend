@@ -5,6 +5,8 @@
         <span>일일 퀘스트</span>
       </div>
       <!-- <Carousel :quests="quests" /> -->
+
+      <!-- completed -->
       <Carousel
         v-if="quests.length > 0"
         :quests="quests"

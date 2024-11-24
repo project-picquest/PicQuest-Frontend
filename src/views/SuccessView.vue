@@ -36,18 +36,18 @@ const loginState = useLoginState();
 const questId = route.params.id;
 // TODO: API 연동되면 빈 문자열로 변경
 const questInfo = ref({
-  id: 1,
-  date: '2024-11-23',
-  attractionName: 'test',
-  img: 'https://picsum.photos/600/600',
-  similarity: 80,
+  id: 0,
+  date: '',
+  attractionName: '',
+  img: '',
+  similarity: 0,
 });
 
-const userInfo = ref({ nickname: 'test', score: 70 });
+const userInfo = ref({ nickname: '', score: 0 });
 onMounted(() => {
   // TODO: API 연동되면 주석 해제
-  // getQuestInfo();
-  // getUserInfo();
+  getQuestInfo();
+  getUserInfo();
 });
 
 const getQuestInfo = () => {
@@ -55,20 +55,19 @@ const getQuestInfo = () => {
     questId,
     (response) => {
       questInfo.value = { ...response.data, attractionName: '', similarity: 0 };
+      const questState = useQuestState();
+      const questSimilarity = questState.questSimilarity;
+      const questAttractionName = questState.questAttractionName;
+      questInfo.value = {
+        ...questInfo.value,
+        attractionName: questAttractionName,
+        similarity: questSimilarity,
+      };
     },
     (error) => {
       console.error('_getQuestDetail API 실패', error);
     }
   );
-
-  const questState = useQuestState();
-  const questSimilarity = questState.questSimilarity;
-  const questAttractionName = questState.questAttractionName;
-  questInfo.value = {
-    ...questInfo.value,
-    attractionName: questAttractionName,
-    similarity: questSimilarity,
-  };
 };
 
 const getUserInfo = () => {

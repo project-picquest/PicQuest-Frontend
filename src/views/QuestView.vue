@@ -68,8 +68,8 @@ import { useQuestState } from '@/stores/questState';
 // TODO: api 켜지면 빈 문자열로 변경
 const questInfo = ref({
   id: 0,
-  date: '2024-11-23',
-  img: 'https://picsum.photos/600/600',
+  date: '',
+  img: '',
 });
 const title = ref('');
 const uploadedImageUrl = ref(null);
@@ -126,16 +126,9 @@ const handleFileUpload = (e) => {
 
 // SUBMIT, FILE ENCODING
 const handleSubmit = () => {
-  // const requestData = {
-  //   title : title.value,
-  //   uploadedImageUrl : uploadedImageUrl.value,
-  // }
-
   const requestData = {
-    first_image:
-      'http://tong.visitkorea.or.kr/cms/resource/09/3303909_image2_1.jpg',
-    second_image:
-      'http://tong.visitkorea.or.kr/cms/resource/09/3303909_image2_1.jpg',
+    first_image: questInfo.value.img,
+    second_image: uploadedImageUrl.value,
   };
 
   const formData = new FormData();
@@ -169,10 +162,11 @@ const handleSubmit = () => {
           console.log('파이썬 서버에 전송 성공');
           console.log(response);
 
-          questState.setQuestInfo(questId, title.value, response.data.유사도);
+          const similarity = Math.floor(response.data.유사도 * 100);
+          questState.setQuestInfo(questId, title.value, similarity);
 
           // TODO: 실제 받는 데이터 활용
-          if (유사도 > 0.9) {
+          if (response.data.유사도 > 0.9) {
             router.push(`/result/success/${questId}`);
           } else {
             router.push(`/result/fail/${questId}`);
@@ -214,8 +208,8 @@ const handleSubmit = () => {
 .image-container {
   width: 38rem;
   height: 40rem;
-  border-radius: 1rem; /* 컨테이너 둥글게 */
-  overflow: hidden; /* 컨테이너 밖 이미지 잘리도록 설정 */
+  border-radius: 1rem;
+  overflow: hidden;
   margin: 1rem 0 0.3rem 0;
   flex-shrink: 0;
 }
