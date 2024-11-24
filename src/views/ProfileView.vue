@@ -3,11 +3,12 @@
     <div class="profile-container">
       <div class="top-container">
         <div class="image-container">
+          <!-- TODO: api 응답 오는 이미지로 수정해야함 -->
           <img src="https://picsum.photos/600/600" />
         </div>
         <div class="userinfo-container">
           <span>🥇🥇🥇</span>
-          <p>hellosonic</p>
+          <p>{{ userInfo.nickname }}</p>
         </div>
       </div>
 
@@ -17,16 +18,25 @@
       <p>여행레벨</p>
       <div>
         <div class="profile-root-bar">
-          <div class="profile-level-bar"></div>
+          <div
+            class="profile-level-bar"
+            :style="{ width: `${widthByScore}%` }"
+          ></div>
         </div>
       </div>
     </div>
     <div class="quest-container">
       <p>최근 완료한 퀘스트</p>
-      <div class="quest-box">
-        <ImageSlider />
-        <ImageSlider />
-        <ImageSlider />
+      <div
+        v-for="(completedQuest, index) in userInfo.completeQuestList"
+        :key="index"
+        class="quest-box"
+      >
+        <ImageSlider
+          :title="completedQuest.title"
+          :image="completedQuest.img"
+          :completedQuest.questScore
+        />
       </div>
     </div>
   </div>
@@ -38,15 +48,16 @@ import ImageSlider from '@/components/ImageSlider.vue';
 
 import { useRoute } from 'vue-router';
 import { useLoginState } from '@/stores/loginState';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 
 const route = useRoute();
 const email = route.params.email;
 const loginState = useLoginState();
 // TODO: api연동 후 데이터 프로퍼티에 따라 달라져야 함
 const userInfo = ref({
-  nickname: 'test',
-  score: 70,
+  nickname: '',
+  userScore: 0,
+  completeQuestList: [],
 });
 
 onMounted(() => {
@@ -62,12 +73,22 @@ const getUserInfo = () => {
     requestParam,
     (response) => {
       userInfo.value = response.data;
+      // TODO: 체크해봐야함
+      setTimeout(() => {
+        widthByScore.value = response.data.userScore;
+      }, 50);
     },
     (error) => {
       console.error('_getUserProfile API 요청 실패', error);
     }
   );
 };
+watch(
+  () => userInfo.value.userScore,
+  (newScore) => {
+    widthByScore.value = newScore;
+  }
+);
 </script>
 
 <style scoped>
@@ -157,11 +178,11 @@ const getUserInfo = () => {
 
 .profile-level-bar {
   position: absolute;
-  width: 77%;
+  /* width: 77%; */
   height: 0.8rem;
   background-color: #f74320;
   border-radius: 10px;
-  animation: fillLevel 1.5s ease-out forwards;
+  transition: width 1.5s ease-out forwards;
 }
 
 .quest-container {
@@ -186,12 +207,12 @@ const getUserInfo = () => {
   margin-top: 0.5rem;
 }
 
-@keyframes fillLevel {
+/* @keyframes fillLevel {
   0% {
     width: 0;
   }
   100% {
     width: 77%;
   }
-}
+} */
 </style>
