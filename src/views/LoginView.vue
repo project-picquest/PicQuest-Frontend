@@ -13,6 +13,7 @@
             type="email"
             id="email"
             name="email"
+            v-model="userInfo.email"
             placeholder="abc@picquest.co.kr"
             :rules="emailRules"
           />
@@ -28,6 +29,7 @@
             type="password"
             id="password"
             name="password"
+            v-model="userInfo.password"
             placeholder="비밀번호를 입력하세요."
             :rules="passwordRules"
           />
