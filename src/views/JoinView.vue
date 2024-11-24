@@ -5,7 +5,10 @@
       <Form @submit="handleJoin">
         <div class="input-box">
           <div class="label-box">
-            <span class="label">이메일</span>
+            <div class="label">
+              이메일
+              <div class="required-dot"></div>
+            </div>
             <ErrorMessage name="email" class="error-message" />
           </div>
           <Field
@@ -20,7 +23,10 @@
         </div>
         <div class="input-box">
           <div class="label-box">
-            <span class="label">닉네임</span>
+            <div class="label">
+              닉네임
+              <div class="required-dot"></div>
+            </div>
             <ErrorMessage name="nickname" class="error-message" />
           </div>
           <Field
@@ -35,7 +41,10 @@
         </div>
         <div class="input-box">
           <div class="label-box">
-            <span class="label">비밀번호</span>
+            <div class="label">
+              비밀번호
+              <div class="required-dot"></div>
+            </div>
             <ErrorMessage name="password" class="error-message" />
           </div>
           <Field
@@ -50,7 +59,10 @@
         </div>
         <div class="input-box">
           <div class="label-box">
-            <span class="label">비밀번호 확인</span>
+            <div class="label">
+              비밀번호 확인
+              <div class="required-dot"></div>
+            </div>
             <ErrorMessage name="checkpassword" class="error-message" />
           </div>
           <Field
@@ -215,8 +227,21 @@ const passwordConfirmRules = (value) => {
 }
 
 .label {
+  position: relative;
+  display: flex;
+  flex-direction: row;
   font-size: 0.8rem;
   font-weight: 600;
+}
+
+.required-dot {
+  position: absolute;
+  top: 0.2rem;
+  right: -0.4rem;
+  width: 0.3rem;
+  height: 0.3rem;
+  border-radius: 50%;
+  background-color: #f74320;
 }
 
 .error-message {
