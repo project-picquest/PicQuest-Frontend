@@ -107,7 +107,7 @@ const handleJoin = () => {
     userInfo.value,
     (response) => {
       console.log('로그인 성공', response);
-      loginState.login();
+      loginState.login(userInfo.value.email);
       router.push('/');
     },
     (error) => {
