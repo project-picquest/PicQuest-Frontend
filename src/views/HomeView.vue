@@ -87,6 +87,7 @@ const getQuests = () => {
     requestParam,
     (response) => {
       quests.value = response.data;
+      console.log("quests 정보: ",response);
     },
     (error) => {
       console.error('_getQuests 실패', error);
