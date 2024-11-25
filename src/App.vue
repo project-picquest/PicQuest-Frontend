@@ -1,6 +1,8 @@
 <template>
   <div class="app-container">
-    <div class="app-box">
+    <Splash v-if="isFirstVisit" />
+
+    <div v-else class="app-box">
       <TopNavigator />
       <router-view></router-view>
       <div class="help-box" @mouseover="showManual" @mouseleave="hideManual">
@@ -16,8 +18,9 @@
 import BottomNavigator from './components/common/BottomNavigator.vue';
 import TopNavigator from './components/common/TopNavigator.vue';
 import Manual from './components/Manual.vue';
+import Splash from './components/Splash.vue';
 import feather from 'feather-icons';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 
 const isHover = ref(false);
 
@@ -29,8 +32,22 @@ const hideManual = () => {
   isHover.value = false;
 };
 
+const isFirstVisit = ref(true);
+
 onMounted(() => {
   feather.replace();
+  // if (localStorage.getItem('hasVisited')) {
+  //   isFirstVisit.value = false;
+  // } else {
+  //   localStorage.setItem('hasVisited', true);
+  // }
+  setTimeout(() => {
+    isFirstVisit.value = false;
+  }, 2500); // 2초 후에 Splash 숨기기
+});
+
+onBeforeUnmount(() => {
+  localStorage.setItem('hasVisited', false);
 });
 </script>
 <style scoped>
