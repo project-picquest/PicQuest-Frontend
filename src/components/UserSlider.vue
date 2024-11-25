@@ -2,7 +2,7 @@
   <div class="container">
     <div class="left-container">
       <div class="image-container">
-        <img src="https://picsum.photos/600/600" />
+        <img :src="props.profileImage" />
       </div>
     </div>
     <div class="center-container">
@@ -16,30 +16,31 @@
       </div>
     </div>
     <div class="right-container">
-      <span>{{ props.score }}</span>
+      <span>{{ props.userScore }}</span>
       <span> (+20)</span>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue';
+import { ref, watch, onMounted } from "vue";
 
 const props = defineProps({
+  profileImage: String,
   nickname: String,
-  score: Number,
+  userScore: Number,
 });
 
 const widthByScore = ref(0);
 
 onMounted(() => {
   setTimeout(() => {
-    widthByScore.value = props.score;
+    widthByScore.value = props.userScore;
   }, 50);
 });
 
 watch(
-  () => props.score,
+  () => props.userScore,
   (newScore) => {
     widthByScore.value = newScore;
   }
