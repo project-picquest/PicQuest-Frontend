@@ -4,7 +4,7 @@
       <div class="top-container">
         <div class="image-container">
           <!-- TODO: api 응답 오는 이미지로 수정해야함 -->
-          <img src="https://picsum.photos/600/600" />
+          <img :src="userInfo.profileImage" />
         </div>
         <div class="userinfo-container">
           <span>🥇🥇🥇</span>
@@ -35,7 +35,8 @@
         <ImageSlider
           :title="completedQuest.title"
           :image="completedQuest.img"
-          :completedQuest.questScore
+          :score="completedQuest.questScore"
+          
         />
       </div>
     </div>
@@ -55,14 +56,16 @@ const email = route.params.email;
 const loginState = useLoginState();
 // TODO: api연동 후 데이터 프로퍼티에 따라 달라져야 함
 const userInfo = ref({
+  profileImage: '',
   nickname: '',
   userScore: 0,
   completeQuestList: [],
 });
+const widthByScore = ref(0);
 
 onMounted(() => {
   // TODO: api 연동 후 주석 해제
-  // getUserInfo();
+  getUserInfo();
 });
 
 // TODO: api연동 후 데이터 프로퍼티에 따라 ref 로직 달라질 수 있음
