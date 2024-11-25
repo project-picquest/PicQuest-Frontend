@@ -1,8 +1,11 @@
 <template>
   <div class="container">
     <div class="left-container">
-      <div class="image-container">
-        <img :src="props.image" />
+      <div class="first-image-container">
+        <img :src="props.firstImage" />
+      </div>
+      <div class="second-image-container">
+        <img :src="props.secondImage" />
       </div>
     </div>
     <div class="center-container">
@@ -23,11 +26,12 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue';
+import { ref, watch, onMounted } from "vue";
 
 const props = defineProps({
   title: String,
-  image: String,
+  firstImage: String,
+  secondImage: String,
   score: Number,
 });
 
@@ -58,6 +62,7 @@ watch(
 }
 
 .left-container {
+  position:relative;
   display: flex;
   align-items: center;
   width: 5rem;
@@ -65,15 +70,34 @@ watch(
   /* background-color: green; */
 }
 
-.image-container {
-  width: 5rem;
-  height: 5rem;
-  border-radius: 1rem;
-  
+.first-image-container {
+  position: absolute;
+  top:0.3rem;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.12);
   overflow: hidden;
 }
 
-.image-container img {
+.first-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.second-image-container {
+  position: absolute;
+  bottom:0.3rem;
+  right: 0;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+}
+
+.second-image-container img {
   width: 100%;
   height: 100%;
   object-fit: cover;
