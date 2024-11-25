@@ -1,10 +1,11 @@
 <template>
   <div class="container">
-    <Form class="form-container" action="">
+    <Form class="form-container" @submit="handleUpdate">
       <div class="image-container">
         <div>
-          <div class="image-box">
-            <img src="https://picsum.photos/600/600" alt="" />
+          <div @click="handleClick" class="image-box">
+            <input type="file" ref="inputRef" @change="handleFileUpload" accept="image/*" />
+            <img :src="userInfo.profileImage" alt="profile-image" />
           </div>
           <div class="change-button-box"><i data-feather="camera" class="icon"></i></div>
         </div>
@@ -63,7 +64,7 @@
             type="password"
             id="checkpassword"
             name="checkpassword"
-            v-model="checkpassword"
+            v-model="userInfo.checkpassword"
             placeholder="위 비밀번호와 동일하게 입력"
             :rules="passwordConfirmRules"
           />
@@ -74,20 +75,91 @@
   </div>
 </template>
 <script setup>
+import { _getUserProfile, _putUserProfile } from "@/api";
 import feather from "feather-icons";
 import { Form, Field, ErrorMessage } from "vee-validate";
 import { ref, onMounted } from "vue";
+import { useLoginState } from "@/stores/loginState";
+import { useRouter } from 'vue-router'
 
 const userInfo = ref({
   profileImage: "",
   nickname: "",
   password: "",
+  checkpassword :""
 });
 const checkpassword = ref("");
+const imageFile = ref(null);
+
+const loginState = useLoginState();
+const inputRef = ref(null);
+const router = useRouter();
+// const uploadedImageUrl = ref('')
 
 onMounted(() => {
   feather.replace();
+  getUserInfo();
 });
+
+const getUserInfo = () => {
+  const requestData = {
+    email : loginState.login
+  }
+  _getUserProfile(loginState.email, requestData, (response) => {
+    userInfo.value.profileImage = response.data.profileImage;
+    userInfo.value.nickname = response.data.nickname;
+  }, error => {
+    console.error("_getUserProfile 실패", error)
+  })
+}
+
+const putUserInfo = () => {
+  const formData = new FormData();
+const newUserInfo = {
+  email: loginState.email,
+  nickname: userInfo.value.nickname,
+  password: userInfo.value.password,
+}
+
+  formData.append("form", JSON.stringify(newUserInfo));
+  formData.append("image", imageFile.value);
+
+  _putUserProfile(formData, (response) => {
+    console.log(response.data);
+    router.push(`/profile/${loginState.email}`)
+  }, error => {
+    console.error("_putUserProfile API 실패", error)
+  })
+}
+
+const isFileImage = (file) => {
+  return file && file.type.split("/")[0] === "image";
+};
+
+const handleFileUpload = (e) => {
+  const $input = e.target;
+  const file = $input.files[0];
+  imageFile.value = file;
+  if (!isFileImage(file)) {
+    // TODO: 실행 순서 이상함
+    alert("이미지만 업로드 가능합니다.");
+    $input.value = "";
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = () => {
+    userInfo.value.profileImage = reader.result;
+  };
+  reader.readAsDataURL(file);
+};
+
+const handleClick = () => {
+  inputRef.value.click();
+}
+
+const handleUpdate = () => {
+  putUserInfo();
+}
 
 const nicknameRules = (value) => {
   if (!value) {
@@ -123,6 +195,8 @@ const passwordRules = (value) => {
 };
 
 const passwordConfirmRules = (value) => {
+  console.log(userInfo.value.checkpassword)
+  console.log(userInfo.value.password)
   if (!value) {
     return "위 비밀번호를 다시 한 번 입력해주세요";
   }
@@ -159,6 +233,10 @@ const passwordConfirmRules = (value) => {
   margin: auto auto;
   border: 2px solid #dadada;
   cursor: pointer;
+}
+
+.image-box > input {
+  display: none;
 }
 
 .image-container img {

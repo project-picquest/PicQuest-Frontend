@@ -12,7 +12,7 @@
         </div>
       </div>
 
-      <button class="submit-button">프로필 수정</button>
+      <button @click="navigateProfileEdit" class="submit-button">프로필 수정</button>
     </div>
     <div class="level-container">
       <p>여행레벨</p>
@@ -50,10 +50,12 @@ import { _getUserProfile } from '@/api';
 import ImageSlider from '@/components/ImageSlider.vue';
 
 import { useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { useLoginState } from '@/stores/loginState';
 import { onMounted, ref, watch } from 'vue';
 
 const route = useRoute();
+const router = useRouter();
 const email = route.params.email;
 const loginState = useLoginState();
 // TODO: api연동 후 데이터 프로퍼티에 따라 달라져야 함
@@ -94,6 +96,11 @@ watch(
     widthByScore.value = newScore;
   }
 );
+
+const navigateProfileEdit = () => {
+  router.push('/profile/edit')
+}
+
 </script>
 
 <style scoped>
