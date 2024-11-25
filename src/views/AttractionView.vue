@@ -1,9 +1,7 @@
 <template>
   <div class="container">
     <div class="image-container">
-      <img
-        :src="attractionInfo.firstImage1 ? attractionInfo.firstImage1 : noImage"
-      />
+      <img :src="attractionInfo.firstImage1 ? attractionInfo.firstImage1 : noImage" />
     </div>
 
     <div class="main-container">
@@ -26,41 +24,41 @@
             class="picture-input-box"
           >
             <!-- TODO: 스타일 수정 -->
-            <img
-              :src="photo"
-              :alt="'photo-' + index"
-              class="additional-photo"
-            />
+            <img :src="photo" :alt="'photo-' + index" class="additional-photo" />
           </div>
         </div>
       </div>
 
-      <!-- <button class="submit-button">제출하기</button> -->
+      <button @click="navigateMap" class="submit-button">지도에서 보기</button>
     </div>
   </div>
 </template>
 
 <script setup>
-import noImage from '@/assets/no-image.jpg';
-import { _getAttractionDetail } from '@/api';
-import { onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import noImage from "@/assets/no-image.jpg";
+import { _getAttractionDetail } from "@/api";
+import { onMounted, ref } from "vue";
+import { useRoute } from "vue-router";
+import { useRouter } from "vue-router";
+import { useAttractionState } from "@/stores/attractionState";
 
 const route = useRoute();
+const router = useRouter();
+const attractionState = useAttractionState();
 const attractionNum = route.params.id;
 
 // TODO: api 연동 후 빈 문자열로 변경
 const attractionInfo = ref({
   no: 0,
-  title: '',
-  firstImage1: '',
-  addr1: '',
-  addr2: '',
+  title: "",
+  firstImage1: "",
+  addr1: "",
+  addr2: "",
   additionalPhotos: [
-    'http://tong.visitkorea.or.kr/cms/resource/09/3303909_image2_1.jpg',
-    'http://tong.visitkorea.or.kr/cms/resource/09/3303909_image2_1.jpg',
-    'http://tong.visitkorea.or.kr/cms/resource/09/3303909_image2_1.jpg',
-    'http://tong.visitkorea.or.kr/cms/resource/09/3303909_image2_1.jpg',
+    "http://tong.visitkorea.or.kr/cms/resource/09/3303909_image2_1.jpg",
+    "http://tong.visitkorea.or.kr/cms/resource/09/3303909_image2_1.jpg",
+    "http://tong.visitkorea.or.kr/cms/resource/09/3303909_image2_1.jpg",
+    "http://tong.visitkorea.or.kr/cms/resource/09/3303909_image2_1.jpg",
   ],
 });
 
@@ -74,12 +72,18 @@ const getAttractionInfo = () => {
     attractionNum,
     (response) => {
       attractionInfo.value = response.data;
+      console.log(response.data);
+      attractionState.setAttractionState(response.data.title, response.data.latitude, response.data.longitude);
     },
     (error) => {
-      consoele.error('_getAttractionDetail API 요청 실패', error);
+      console.error("_getAttractionDetail API 요청 실패", error);
     }
   );
 };
+
+const navigateMap = () => {
+  router.push('/map');
+}
 </script>
 
 <style scoped>
