@@ -3,17 +3,19 @@
     <button @click="prev" class="carousel-button prev">‹</button>
 
     <div class="carousel">
-      <div
-        class="carousel-item"
-        v-for="(item, index) in visibleImages"
-        :key="index"
-      >
-        <img
-          :src="item.img"
-          alt="carousel image"
-          class="carousel-image"
-          @click="handleImageClick(index + 1)"
-        />
+      <div class="carousel-item" v-for="(item, index) in visibleImages" :key="index">
+        <div class="item-box">
+          <img
+            :src="item.img"
+            alt="carousel image"
+            class="carousel-image"
+            @click="handleImageClick(index + 1)"
+          />
+          <!-- item.completed가 true일 때만 image-overlay를 표시 -->
+          <div v-if="item.completed" class="image-overlay">
+            <div class="overlay-text">완료한 퀘스트</div>
+          </div>
+        </div>
       </div>
     </div>
     <button @click="next" class="carousel-button next">›</button>
@@ -21,8 +23,8 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
-import { ref } from 'vue';
+import { defineProps } from "vue";
+import { ref } from "vue";
 
 const props = defineProps({
   quests: {
@@ -59,14 +61,11 @@ const next = () => {
 };
 
 const updateVisibleImages = () => {
-  visibleImages.value = data.value.slice(
-    currentIndex.value,
-    currentIndex.value + 3
-  );
+  visibleImages.value = data.value.slice(currentIndex.value, currentIndex.value + 3);
 };
 
 const handleImageClick = (item) => {
-  emit('onImageClick', item);
+  emit("onImageClick", item);
 };
 </script>
 
@@ -122,11 +121,49 @@ const handleImageClick = (item) => {
   align-items: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.12);
 }
+
 .carousel-button.prev {
   left: 0.15rem;
+  z-index: 999;
 }
 
 .carousel-button.next {
   right: 0.15rem;
+  z-index: 999;
 }
+
+.item-box {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  border-radius: 0.75rem;
+  overflow: hidden;
+
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.overlay-text {
+  color: #ffffff;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: default;
+}
+
 </style>
