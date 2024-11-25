@@ -72,6 +72,8 @@ const router = createRouter({
         }
       },
     },
+    {path: '/profile/edit', name: 'profileEdit', component : () => import('@/views/ProfileEditView.vue')} ,
+
     {
       path: '/:catchAll(.*)',
       name: 'error',
