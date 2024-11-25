@@ -29,7 +29,7 @@ onMounted(() => {
   }, 100); // 0.5초 후에 나타나도록 설정
   setTimeout(() => {
     isVisible.value = false;
-  }, 1700); // 1초 후에 사라지도록 설정
+  }, 2000); // 1초 후에 사라지도록 설정
 });
 </script>
 
@@ -50,7 +50,7 @@ onMounted(() => {
   flex-direction: column;
   align-items: center;
   opacity: 0;
-  transition: opacity 0.7s ease-in-out;
+  transition: opacity 0.4s ease-in-out;
 }
 
 .text-box.visible {
