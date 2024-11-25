@@ -20,10 +20,12 @@
         <div class="profile-root-bar">
           <div
             class="profile-level-bar"
-            :style="{ width: `${widthByScore}%` }"
+            :style="{ width: `${widthByScore % 100}%` }"
           ></div>
         </div>
       </div>
+      <div class="score-box">
+      <span class="score" :style="{left: `${(widthByScore % 100) / 3.1}rem`}">{{userInfo.userScore % 100}} pt</span></div>
     </div>
     <div class="quest-container">
       <p>최근 완료한 퀘스트</p>
@@ -109,6 +111,7 @@ watch(
   border-radius: 50%;
   overflow: hidden;
   margin: auto auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.12);
 }
 
 .image-container img {
@@ -186,6 +189,23 @@ watch(
   background-color: #f74320;
   border-radius: 10px;
   transition: width 1.5s ease-out forwards;
+}
+
+.score-box {
+  position: relative;
+  width: 100%;
+  height: 1rem;
+  /* background-color: yellow; */
+
+}
+
+.score {
+  position: absolute;
+  top: -0.4rem;
+  left: 2rem;
+  color: #f74320;
+  font-weight: 700;
+
 }
 
 .quest-container {

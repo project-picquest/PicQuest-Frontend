@@ -16,14 +16,16 @@
       </div>
     </div>
     <div class="right-container">
-      <span>{{ props.userScore }}</span>
-      <span> (+20)</span>
+      <span>{{ props.userScore % 100 }}</span>
+      <span> (+{{ Math.floor(questState.questSimilarity * 0.2) }})</span>
+      <!-- <span>{{ props.userScore % 100}} / 100</span> -->
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, watch, onMounted } from "vue";
+import { useQuestState } from "@/stores/questState";
 
 const props = defineProps({
   profileImage: String,
@@ -31,18 +33,21 @@ const props = defineProps({
   userScore: Number,
 });
 
+const questState = useQuestState();
 const widthByScore = ref(0);
 
 onMounted(() => {
   setTimeout(() => {
-    widthByScore.value = props.userScore;
+    widthByScore.value = props.userScore  % 100 ;
   }, 50);
+
+
 });
 
 watch(
   () => props.userScore,
   (newScore) => {
-    widthByScore.value = newScore;
+    widthByScore.value = newScore % 100;
   }
 );
 </script>
@@ -65,6 +70,7 @@ watch(
   height: 5rem;
   border-radius: 1rem;
   overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.12);
 }
 
 .image-container img {
