@@ -12,7 +12,9 @@ const _join = (param, success, fail) => {
 };
 
 const _postQuest = (param, success, fail) => {
-  local.post('quests/submit', param).then(success).catch(fail);
+  const headers = {
+    "Content-Type": "multipart/form-data",}
+  local.post('/quests/submit', param, { headers }).then(success).catch(fail);
 };
 
 const _getQuests = (param, success, fail) => {
