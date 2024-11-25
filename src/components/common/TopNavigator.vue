@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="left-container">
-      <span>PicQuest</span>
+      <span @click="navigateHome">PicQuest</span>
     </div>
     <div class="center-container"></div>
     <div class="right-container">
@@ -24,6 +24,11 @@ const router = useRouter();
 const navigateLogin = () => {
   router.push("/login");
 };
+
+
+const navigateHome = () => {
+  router.push('/');
+}
 
 
 const handleLogout = () => {
@@ -65,6 +70,10 @@ const handleLogout = () => {
   flex-shrink: 1;
   flex-basis: 25%;
   /* background-color: green; */
+}
+
+.left-container > span {
+  cursor: pointer;
 }
 .center-container {
   flex-grow: 2;
