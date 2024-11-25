@@ -2,9 +2,8 @@
   <div class="container">
     <div class="quest_info-box">
       <span
-        >{{ questInfo.date.split('-')[0] }}년
-        {{ questInfo.date.split('-')[1] }}월
-        {{ questInfo.date.split('-')[2] }}일 오늘의 퀘스트</span
+        >{{ questInfo.date.split("-")[0] }}년 {{ questInfo.date.split("-")[1] }}월
+        {{ questInfo.date.split("-")[2] }}일 오늘의 퀘스트</span
       >
     </div>
     <div class="image-container">
@@ -37,12 +36,7 @@
           <span>관광지 사진 등록하기</span>
         </div>
         <div @click="handleClick" class="picture-input-box">
-          <input
-            type="file"
-            ref="inputRef"
-            @change="handleFileUpload"
-            accept="image/*"
-          />
+          <input type="file" ref="inputRef" @change="handleFileUpload" accept="image/*" />
           <img
             v-show="uploadedImageUrl"
             class="uploaded-image"
@@ -59,19 +53,20 @@
   </div>
 </template>
 <script setup>
-import { onMounted, ref } from 'vue';
-import feather from 'feather-icons';
-import { _getQuestDetail, _postImage } from '@/api';
-import { useRoute, useRouter } from 'vue-router';
-import { useQuestState } from '@/stores/questState';
+import { onMounted, ref } from "vue";
+import feather from "feather-icons";
+import { _getQuestDetail, _postImage, _postQuest } from "@/api";
+import { useRoute, useRouter } from "vue-router";
+import { useLoginState } from "@/stores/loginState";
+import { useQuestState } from "@/stores/questState";
 
 // TODO: api 켜지면 빈 문자열로 변경
 const questInfo = ref({
   id: 0,
-  date: '',
-  img: '',
+  date: "",
+  img: "",
 });
-const title = ref('');
+const title = ref("");
 const uploadedImageUrl = ref(null);
 const inputRef = ref(null);
 const route = useRoute();
@@ -93,14 +88,14 @@ const getQuestDetail = (questId) => {
       questInfo.value = response.data;
     },
     (error) => {
-      console.error('_getQuestDetail 요청 실패', error);
+      console.error("_getQuestDetail 요청 실패", error);
     }
   );
 };
 
 // FILE UPLOAD
 const isFileImage = (file) => {
-  return file && file.type.split('/')[0] === 'image';
+  return file && file.type.split("/")[0] === "image";
 };
 
 const handleClick = () => {
@@ -112,8 +107,8 @@ const handleFileUpload = (e) => {
   const file = $input.files[0];
   if (!isFileImage(file)) {
     // TODO: 실행 순서 이상함
-    alert('이미지만 업로드 가능합니다.');
-    $input.value = '';
+    alert("이미지만 업로드 가능합니다.");
+    $input.value = "";
     return;
   }
   const reader = new FileReader();
@@ -137,44 +132,73 @@ const handleSubmit = () => {
     return fetch(imageUrl)
       .then((response) => response.blob())
       .then((blob) => {
-        const file = new File([blob], fieldName + '.jpg', {
-          type: 'image/jpeg',
+        const file = new File([blob], fieldName + ".jpg", {
+          type: "image/jpeg",
         });
         formData.append(fieldName, file);
       })
       .catch((error) => {
-        console.error('이미지 로드 실패:', error);
+        console.error("이미지 로드 실패:", error);
       });
   };
 
-  addImageToFormData(requestData.first_image, formData, 'first_image')
+  addImageToFormData(requestData.first_image, formData, "first_image")
     .then(() => {
-      return addImageToFormData(
-        requestData.second_image,
-        formData,
-        'second_image'
-      );
+      return addImageToFormData(requestData.second_image, formData, "second_image");
     })
     .then(() => {
       _postImage(
         formData,
         (response) => {
-          console.log('파이썬 서버에 전송 성공');
+          console.log("파이썬 서버에 전송 성공");
+
           console.log(response);
 
           const similarity = Math.floor(response.data.유사도 * 100);
-          questState.setQuestInfo(questId, title.value, uploadedImageUrl.value, similarity);
+          questState.setQuestInfo(
+            questId,
+            title.value,
+            uploadedImageUrl.value,
+            similarity
+          );
 
           // TODO: 실제 받는 데이터 활용
           if (response.data.유사도 > 0.9) {
             router.push(`/result/success/${questId}`);
-            // 여기서 점수 업데이트 api 
+            const loginState = useLoginState();
+            const newFormData = new FormData();
+            const image = formData.get("second_image");
+            if (image) {
+              console.log(image);
+              newFormData.append("image", image);
+            } else {
+              console.error("파일을 찾을 수 없습니다.");
+            }
+            const questInfo = {
+              userEmail: loginState.email,
+              questId: parseInt(questId),
+              title: title.value,
+              score: similarity,
+            };
+
+            newFormData.append("form", JSON.stringify(questInfo));
+
+
+            _postQuest(
+              newFormData,
+              (response) => {
+                console.log("postQuest성공", response.data);
+              },
+              (error) => {
+                console.error(error);
+              }
+            );
           } else {
             router.push(`/result/fail/${questId}`);
           }
         },
         (error) => {
-          console.error('파이썬 서버에 전송 실패', error);
+          console.error("파이썬 서버에 전송 실패", error);
         }
       );
     });
