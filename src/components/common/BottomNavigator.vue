@@ -29,10 +29,12 @@
 import feather from "feather-icons";
 import { onMounted, ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
+import { useLoginState } from "@/stores/loginState";
 
 const router = useRouter();
 const route = useRoute();
 const currentPath = ref("");
+const loginState = useLoginState();
 
 const navigateHome = () => {
   router.push("/home");
@@ -44,7 +46,7 @@ const navigateMap = () => {
   alert("추가 예정인 기능입니다.");
 };
 const navigateProfile = () => {
-  router.push("/profile/hellosonic");
+  router.push(`/profile/${loginState.email}`);
 };
 
 watch(
