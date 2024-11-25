@@ -73,6 +73,7 @@ const route = useRoute();
 const router = useRouter();
 const questId = route.params.id;
 const questState = useQuestState();
+const originalQuestId = ref(0);
 
 onMounted(() => {
   feather.replace();
@@ -86,6 +87,7 @@ const getQuestDetail = (questId) => {
     questId,
     (response) => {
       questInfo.value = response.data;
+      originalQuestId.value = response.data.id
     },
     (error) => {
       console.error("_getQuestDetail 요청 실패", error);
@@ -176,7 +178,7 @@ const handleSubmit = () => {
             }
             const questInfo = {
               userEmail: loginState.email,
-              questId: parseInt(questId),
+              questId: parseInt(originalQuestId.value),
               title: title.value,
               score: similarity,
             };
