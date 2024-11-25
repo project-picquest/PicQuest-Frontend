@@ -82,7 +82,7 @@ const questState = useQuestState();
 onMounted(() => {
   feather.replace();
   // TODO: API 연동 후 주석 해제
-  // getQuestDetail(questId);
+  getQuestDetail(questId);
 });
 
 // API
@@ -163,11 +163,12 @@ const handleSubmit = () => {
           console.log(response);
 
           const similarity = Math.floor(response.data.유사도 * 100);
-          questState.setQuestInfo(questId, title.value, similarity);
+          questState.setQuestInfo(questId, title.value, uploadedImageUrl.value, similarity);
 
           // TODO: 실제 받는 데이터 활용
           if (response.data.유사도 > 0.9) {
             router.push(`/result/success/${questId}`);
+            // 여기서 점수 업데이트 api 
           } else {
             router.push(`/result/fail/${questId}`);
           }
