@@ -6,26 +6,31 @@
       <p>일치하지 않아요</p>
     </div>
     <div>
-      <ImageSlider
+
+      <ImageSliderAtResult
         :title="questInfo.attractionName"
-        :image="questInfo.img"
+        :firstImage="questInfo.img"
+        :secondImage="questState.questImage"
         :score="questInfo.similarity"
       />
     </div>
-    <button @click="navigateQuest(id)" class="submit-button">재도전하기</button>
+    <button @click="navigateQuest(questId)" class="submit-button">재도전하기</button>
   </div>
 </template>
 
 <script setup>
 import { useRouter, useRoute } from 'vue-router';
 import ImageSlider from '@/components/ImageSlider.vue';
+import ImageSliderAtResult from '@/components/ImageSliderAtResult.vue'
 import { onMounted, ref } from 'vue';
 import { useQuestState } from '@/stores/questState';
 import { _getQuestDetail } from '@/api';
 
+const questState = useQuestState();
 const route = useRoute();
 const router = useRouter();
 const questId = route.params.id;
+
 
 // TODO: API 연동되면 빈 문자열로 변경
 const questInfo = ref({
@@ -46,7 +51,7 @@ const getQuestInfo = () => {
     questId,
     (response) => {
       questInfo.value = { ...response.data, attractionName: '', similarity: 0 };
-      const questState = useQuestState();
+      
       const questSimilarity = questState.questSimilarity;
       const questAttractionName = questState.questAttractionName;
       questInfo.value = {
@@ -60,8 +65,9 @@ const getQuestInfo = () => {
     }
   );
 };
-const navigateQuest = (id) => {
-  router.push(`/quest/${id}`);
+const navigateQuest = (questId) => {
+  console.log(questId)
+  router.push(`/quest/${questId}`);
   console.log('클릭');
 };
 </script>

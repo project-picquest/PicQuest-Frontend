@@ -1,49 +1,53 @@
 <template>
   <div class="container">
+    <!-- <Confetti /> -->
     <div class="message-container">
+      
       <p>🎉</p>
       <p>축하합니다</p>
       <p>입력한 관광지 정보가 일치해요.</p>
     </div>
     <div>
-      <ImageSlider
+      <ImageSliderAtResult
         :title="questInfo.attractionName"
-        :image="questInfo.img"
+        :firstImage="questInfo.img"
+        :secondImage="questState.questImage"
         :score="questInfo.similarity"
       />
 
       <v-divider style="margin: 1.8rem 0"></v-divider>
-      <UserSlider :nickname="userInfo.nickname" :score="userInfo.score" />
+      <UserSlider :profileImage="userInfo.profileImage" :nickname="userInfo.nickname" :userScore="userInfo.userScore" />
     </div>
-    <button @click="navigateProfile" class="submit-button">
-      나의 정보 보러가기
-    </button>
+    <button @click="navigateProfile" class="submit-button">나의 정보 보러가기</button>
   </div>
 </template>
 <script setup>
-import ImageSlider from '@/components/ImageSlider.vue';
-import UserSlider from '@/components/UserSlider.vue';
-import { useRoute } from 'vue-router';
-import { useRouter } from 'vue-router';
-import { useLoginState } from '@/stores/loginState';
-import { useQuestState } from '@/stores/questState';
-import { onMounted, ref } from 'vue';
-import { _getQuestDetail, _getUserProfile } from '@/api';
+import ImageSlider from "@/components/ImageSlider.vue";
+import UserSlider from "@/components/UserSlider.vue";
+import { useRoute } from "vue-router";
+import { useRouter } from "vue-router";
+import { useLoginState } from "@/stores/loginState";
+import { useQuestState } from "@/stores/questState";
+import { onMounted, ref } from "vue";
+import { _getQuestDetail, _getUserProfile } from "@/api";
+import Confetti from "@/components/Confetti.vue";
+import ImageSliderAtResult from "@/components/ImageSliderAtResult.vue";
 
 const route = useRoute();
 const router = useRouter();
 const loginState = useLoginState();
+const questState = useQuestState();
 const questId = route.params.id;
 // TODO: API 연동되면 빈 문자열로 변경
 const questInfo = ref({
   id: 0,
-  date: '',
-  attractionName: '',
-  img: '',
+  date: "",
+  attractionName: "",
+  img: "",
   similarity: 0,
 });
 
-const userInfo = ref({ nickname: '', score: 0 });
+const userInfo = ref({ profileImage: "", nickname: '',userScore: 0 });
 onMounted(() => {
   // TODO: API 연동되면 주석 해제
   getQuestInfo();
@@ -54,8 +58,9 @@ const getQuestInfo = () => {
   _getQuestDetail(
     questId,
     (response) => {
-      questInfo.value = { ...response.data, attractionName: '', similarity: 0 };
-      const questState = useQuestState();
+      console.log('resultView questInfo', response.data);
+      questInfo.value = { ...response.data, attractionName: "", similarity: 0 };
+      
       const questSimilarity = questState.questSimilarity;
       const questAttractionName = questState.questAttractionName;
       questInfo.value = {
@@ -65,7 +70,7 @@ const getQuestInfo = () => {
       };
     },
     (error) => {
-      console.error('_getQuestDetail API 실패', error);
+      console.error("_getQuestDetail API 실패", error);
     }
   );
 };
@@ -82,7 +87,7 @@ const getUserInfo = () => {
       userInfo.value = response.data;
     },
     (error) => {
-      console.error('_getUserProfile API 실패', error);
+      console.error("_getUserProfile API 실패", error);
     }
   );
 };
