@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <!-- <Confetti /> -->
+    <Confetti />
     <div class="message-container">
       
       <p>🎉</p>
@@ -99,6 +99,7 @@ const navigateProfile = () => {
 </script>
 <style scoped>
 .container {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -108,6 +109,7 @@ const navigateProfile = () => {
   flex-direction: column;
   align-items: center;
   margin-bottom: 2.5rem;
+  z-index: 99;
   /* background-color: beige; */
 }
 .message-container :nth-child(1) {
