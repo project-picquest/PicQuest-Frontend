@@ -11,7 +11,7 @@
       </div>
     </div>
     <div>
-      <div class="icon-container" @click="navigateMap">
+      <div class="icon-container" @click="navigateMap" :class="{'active-hm' : currentPath[1] === 'map'}">
         <i data-feather="map-pin" class="icon"></i>
         <p>지도</p>
       </div>
@@ -43,7 +43,7 @@ const navigateQuest = () => {
   router.push("/quest/1");
 };
 const navigateMap = () => {
-  alert("추가 예정인 기능입니다.");
+  router.push('/map')
 };
 const navigateProfile = () => {
   router.push(`/profile/${loginState.email}`);
