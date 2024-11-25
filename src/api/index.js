@@ -45,6 +45,12 @@ const _getUserProfile = (email, param, success, fail) => {
   local.post(`/user/profile/${email}`, param).then(success).catch(fail);
 };
 
+const _putUserProfile = (param, success, fail) => {
+  const headers = {
+    "Content-Type": "multipart/form-data",}
+  local.post('/user/update', param, { headers }).then(success).catch(fail)
+}
+
 export {
   _login,
   _join,
@@ -56,4 +62,5 @@ export {
   _getAttractionDetail,
   _postImage,
   _getUserProfile,
+  _putUserProfile
 };
