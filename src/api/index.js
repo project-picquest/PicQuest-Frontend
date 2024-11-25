@@ -40,7 +40,7 @@ const _postImage = (param, success, fail) => {
 };
 
 const _getUserProfile = (email, param, success, fail) => {
-  local.get(`/user/profile/${email}`, param).then(success).catch(fail);
+  local.post(`/user/profile/${email}`, param).then(success).catch(fail);
 };
 
 export {
