@@ -60,6 +60,7 @@ const handleLogout = () => {
   flex-shrink: 0;
   border-bottom: 1px solid #ececec;
   margin: 0 1.5rem;
+  z-index: 999;
 }
 
 .left-container {

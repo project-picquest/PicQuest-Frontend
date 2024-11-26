@@ -70,6 +70,7 @@ onMounted(() => {
   flex-shrink: 0;
   border-top: 1px solid #ececec;
   margin: 0 1.5rem;
+  z-index: 999;
 }
 
 .icon-container {

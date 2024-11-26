@@ -265,6 +265,6 @@ function cubeBezier(p0, c0, c1, p1, t) {
   position: absolute;
   width: 512px;
   height: 100vh;
-  top: -26rem;
+  top: -27rem;
 }
 </style>

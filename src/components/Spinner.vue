@@ -36,7 +36,7 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   gap: 0.3em;
-  z-index: 9999;
+  z-index: 999;
 }
 
 .text {
