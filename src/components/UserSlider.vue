@@ -8,6 +8,7 @@
     <div class="center-container">
       <div class="text-box">
         <span>{{ props.nickname }}</span>
+        <div style="display:flex; align-items: center; margin-top: 0.1rem; margin-left: 0.3rem;"><img class="star-image" :src="star" alt="star"></div>
       </div>
       <div>
         <div class="root-bar">
@@ -26,12 +27,24 @@
 <script setup>
 import { ref, watch, onMounted } from "vue";
 import { useQuestState } from "@/stores/questState";
+import star1 from "@/assets/star/star1.png";
+import star2 from "@/assets/star/star2.png";
+import star3 from "@/assets/star/star3.png";
 
 const props = defineProps({
   profileImage: String,
   nickname: String,
   userScore: Number,
 });
+
+const star = ref('');
+if (props.userScore > 200) {
+  star.value = star3;
+} else if (props.userScore > 100) {
+  star.value = star2;
+} else {
+  star.value = star1;
+}
 
 const questState = useQuestState();
 const widthByScore = ref(0);
@@ -106,6 +119,8 @@ watch(
 
 .text-box {
   margin-bottom: 0.3rem;
+  display: flex;
+  align-items: center;
 }
 
 .text-box span {
@@ -123,5 +138,9 @@ watch(
   /* font-size: 1rem; */
   font-weight: 700;
   color: #f74320;
+}
+
+.star-image {
+  width: 4rem;
 }
 </style>

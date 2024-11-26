@@ -7,15 +7,19 @@
           <img :src="userInfo.profileImage" />
         </div>
         <div class="userinfo-container">
-          <span>🥇🥇🥇</span>
-          <p>{{ userInfo.nickname }}</p>
+          <div><img class="star-image" :src="star" alt="star" /></div>
+          <span>{{ userInfo.nickname }}</span>
         </div>
       </div>
 
       <button @click="navigateProfileEdit" class="submit-button">프로필 수정</button>
     </div>
     <div class="level-container">
-      <p>여행레벨</p>
+      <div style="display: flex; flex-direction: row; width: 100%; justify-content: space-between; align-items: center">
+        <p>여행레벨</p>
+        <div v-show="userInfo.userScore < 3" style="display: flex; margin-top:0.1rem;"><span style="font-size:0.8rem; color: #a2a2a2; margin-right:0.6rem;">다음 등급</span><img class="star-image" :src="star" alt="" /></div>
+      </div>
+
       <div>
         <div class="profile-root-bar">
           <div
@@ -25,7 +29,10 @@
         </div>
       </div>
       <div class="score-box">
-      <span class="score" :style="{left: `${(widthByScore % 100) / 3.1}rem`}">{{userInfo.userScore % 100}} pt</span></div>
+        <span class="score" :style="{ left: `${(widthByScore % 100) / 3.1}rem` }"
+          >{{ userInfo.userScore % 100 }} pt</span
+        >
+      </div>
     </div>
     <div class="quest-container">
       <p>최근 완료한 퀘스트</p>
@@ -38,7 +45,6 @@
           :title="completedQuest.title"
           :image="completedQuest.img"
           :score="completedQuest.questScore"
-          
         />
       </div>
     </div>
@@ -46,13 +52,16 @@
 </template>
 
 <script setup>
-import { _getUserProfile } from '@/api';
-import ImageSlider from '@/components/ImageSlider.vue';
+import { _getUserProfile } from "@/api";
+import ImageSlider from "@/components/ImageSlider.vue";
+import star1 from "@/assets/star/star1.png";
+import star2 from "@/assets/star/star2.png";
+import star3 from "@/assets/star/star3.png";
 
-import { useRoute } from 'vue-router';
-import { useRouter } from 'vue-router';
-import { useLoginState } from '@/stores/loginState';
-import { onMounted, ref, watch } from 'vue';
+import { useRoute } from "vue-router";
+import { useRouter } from "vue-router";
+import { useLoginState } from "@/stores/loginState";
+import { onMounted, ref, watch } from "vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -60,12 +69,25 @@ const email = route.params.email;
 const loginState = useLoginState();
 // TODO: api연동 후 데이터 프로퍼티에 따라 달라져야 함
 const userInfo = ref({
-  profileImage: '',
-  nickname: '',
+  profileImage: "",
+  nickname: "",
   userScore: 0,
   completeQuestList: [],
 });
+
+const star = ref("");
 const widthByScore = ref(0);
+
+const setStarImage = () => {
+  const score = userInfo.value.userScore;
+  if (score >= 200) {
+    star.value = star3;
+  } else if (score >= 100) {
+    star.value = star2;
+  } else {
+    star.value = star1;
+  }
+};
 
 onMounted(() => {
   // TODO: api 연동 후 주석 해제
@@ -80,13 +102,14 @@ const getUserInfo = () => {
     requestParam,
     (response) => {
       userInfo.value = response.data;
+      setStarImage();
       // TODO: 체크해봐야함
       setTimeout(() => {
         widthByScore.value = response.data.userScore;
       }, 50);
     },
     (error) => {
-      console.error('_getUserProfile API 요청 실패', error);
+      console.error("_getUserProfile API 요청 실패", error);
     }
   );
 };
@@ -98,9 +121,8 @@ watch(
 );
 
 const navigateProfileEdit = () => {
-  router.push('/profile/edit')
-}
-
+  router.push("/profile/edit");
+};
 </script>
 
 <style scoped>
@@ -151,7 +173,7 @@ const navigateProfileEdit = () => {
   justify-content: center;
 }
 
-.userinfo-container p {
+.userinfo-container span {
   font-size: 1.2rem;
   font-weight: 700;
 }
@@ -203,7 +225,6 @@ const navigateProfileEdit = () => {
   width: 100%;
   height: 1rem;
   /* background-color: yellow; */
-
 }
 
 .score {
@@ -212,7 +233,6 @@ const navigateProfileEdit = () => {
   left: 2rem;
   color: #f74320;
   font-weight: 700;
-
 }
 
 .quest-container {
@@ -245,4 +265,9 @@ const navigateProfileEdit = () => {
     width: 77%;
   }
 } */
+
+.star-image {
+  width: 4rem;
+  margin-left: -0.4rem;
+}
 </style>
