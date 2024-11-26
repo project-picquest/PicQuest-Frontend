@@ -2,7 +2,6 @@
   <div class="container">
     <Confetti />
     <div class="message-container">
-      
       <p>🎉</p>
       <p>축하합니다</p>
       <p>입력한 관광지 정보가 일치해요.</p>
@@ -16,7 +15,12 @@
       />
 
       <v-divider style="margin: 1.8rem 0"></v-divider>
-      <UserSlider :profileImage="userInfo.profileImage" :nickname="userInfo.nickname" :userScore="userInfo.userScore" />
+      <div class="profile-text-box"><p>나의 정보</p></div>
+      <UserSlider
+        :profileImage="userInfo.profileImage"
+        :nickname="userInfo.nickname"
+        :userScore="userInfo.userScore"
+      />
     </div>
     <button @click="navigateProfile" class="submit-button">나의 정보 보러가기</button>
   </div>
@@ -47,7 +51,7 @@ const questInfo = ref({
   similarity: 0,
 });
 
-const userInfo = ref({ profileImage: "", nickname: '',userScore: 0 });
+const userInfo = ref({ profileImage: "", nickname: "", userScore: 0 });
 onMounted(() => {
   // TODO: API 연동되면 주석 해제
   getQuestInfo();
@@ -58,9 +62,9 @@ const getQuestInfo = () => {
   _getQuestDetail(
     questId,
     (response) => {
-      console.log('resultView questInfo', response.data);
+      console.log("resultView questInfo", response.data);
       questInfo.value = { ...response.data, attractionName: "", similarity: 0 };
-      
+
       const questSimilarity = questState.questSimilarity;
       const questAttractionName = questState.questAttractionName;
       questInfo.value = {
@@ -133,5 +137,21 @@ const navigateProfile = () => {
   color: white;
   border-radius: 10px;
   margin-top: 2.5rem;
+  cursor: pointer;
+  z-index: 99;
+}
+
+.profile-text-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 3rem;
+  margin-top: 2rem;
+}
+
+.profile-text-box p {
+  font-size: 1.3rem;
+  font-weight: 700;
 }
 </style>
