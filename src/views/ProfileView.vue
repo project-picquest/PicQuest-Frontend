@@ -4,7 +4,7 @@
       <div class="top-container">
         <div class="image-container">
           <!-- TODO: api 응답 오는 이미지로 수정해야함 -->
-          <img :src="userInfo.profileImage" />
+          <img :src="userInfo.profileImage ? userInfo.profileImage : defaultProfileImage" />
         </div>
         <div class="userinfo-container">
           <div><img class="star-image" :src="star" alt="star" /></div>
@@ -17,7 +17,7 @@
     <div class="level-container">
       <div style="display: flex; flex-direction: row; width: 100%; justify-content: space-between; align-items: center">
         <p>여행레벨</p>
-        <div v-show="userInfo.userScore < 3" style="display: flex; margin-top:0.1rem;"><span style="font-size:0.8rem; color: #a2a2a2; margin-right:0.6rem;">다음 등급</span><img class="star-image" :src="star" alt="" /></div>
+        <div v-show="userInfo.userScore < 300" style="display: flex; margin-top:0.1rem;"><span style="font-size:0.8rem; color: #a2a2a2; margin-right:0.6rem;">다음 등급</span><img class="star-image" :src="nextStar" alt="" /></div>
       </div>
 
       <div>
@@ -57,6 +57,7 @@ import ImageSlider from "@/components/ImageSlider.vue";
 import star1 from "@/assets/star/star1.png";
 import star2 from "@/assets/star/star2.png";
 import star3 from "@/assets/star/star3.png";
+import defaultProfileImage from "@/assets/default-profileImage.png";
 
 import { useRoute } from "vue-router";
 import { useRouter } from "vue-router";
@@ -75,17 +76,23 @@ const userInfo = ref({
   completeQuestList: [],
 });
 
+console.log(star1)
+
 const star = ref("");
+const nextStar = ref("");
 const widthByScore = ref(0);
 
 const setStarImage = () => {
   const score = userInfo.value.userScore;
   if (score >= 200) {
     star.value = star3;
+    nextStar.value = '';
   } else if (score >= 100) {
     star.value = star2;
+    nextStar.value = star3;
   } else {
     star.value = star1;
+    nextStar.value = star2;
   }
 };
 
