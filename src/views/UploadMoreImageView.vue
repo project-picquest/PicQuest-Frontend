@@ -32,7 +32,7 @@
             </div>
           </div>
         </div>
-        <button @click="navigateMap" class="submit-button">사진 등록하기</button>
+        <button class="submit-button">사진 등록하기</button>
       </form>
     </div>
   </div>
@@ -110,6 +110,11 @@ const getAttractionInfo = () => {
 };
 
 const handleSubmit = () => {
+  if (inputRef.value.files.length === 0) {
+    alert('사진을 첨부해주세요.');
+    return;
+  }
+  
   const formData = new FormData();
   formData.append("attractionNo", JSON.stringify(attractionNum));
 
