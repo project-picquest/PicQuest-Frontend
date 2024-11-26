@@ -93,7 +93,7 @@ const handleImageClick = (item) => {
   align-items: center;
   width: 33.33%;
   aspect-ratio: 1/1;
-  padding: 0 0.5rem;
+  margin: 0 0.5rem;
   overflow: hidden;
 }
 
