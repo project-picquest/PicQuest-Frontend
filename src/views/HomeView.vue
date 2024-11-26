@@ -66,9 +66,11 @@ import { onMounted, ref } from 'vue';
 import noImage from '@/assets/no-image.jpg';
 import { useRouter } from 'vue-router';
 import { useLoginState } from '@/stores/loginState';
+import { useAvailableQuestState } from '@/stores/availableQuestsState';
 
 const router = useRouter();
 const loginState = useLoginState();
+const availableQuestsState = useAvailableQuestState();
 const quests = ref([]);
 const attractions = ref([]);
 const searchTitle = ref('');
@@ -87,6 +89,14 @@ const getQuests = () => {
     requestParam,
     (response) => {
       quests.value = response.data;
+      response.data.map(quest => { 
+        if (!quest.completed) {
+          if (!availableQuestsState.quests.includes(quest.idx)) {
+            availableQuestsState.addAvailableQuests(quest.idx);
+
+          }
+        } 
+      })
       console.log("quests 정보: ",response);
     },
     (error) => {

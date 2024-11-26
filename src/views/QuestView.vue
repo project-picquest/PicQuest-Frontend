@@ -62,6 +62,7 @@ import { useRoute, useRouter } from "vue-router";
 import { useLoginState } from "@/stores/loginState";
 import { useQuestState } from "@/stores/questState";
 import Spinner from "@/components/Spinner.vue"
+import { useAvailableQuestState } from "@/stores/availableQuestsState";
 
 // TODO: api 켜지면 빈 문자열로 변경
 const questInfo = ref({
@@ -178,6 +179,8 @@ const handleSubmit = () => {
           if (response.data.유사도 > 0.8) {
             router.push(`/result/success/${questId}`);
             const loginState = useLoginState();
+            const availableQuestsState = useAvailableQuestState();
+            availableQuestsState.removeAvailableQuest(questId);
             const newFormData = new FormData();
             const image = formData.get("second_image");
             if (image) {

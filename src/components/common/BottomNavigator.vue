@@ -30,17 +30,24 @@ import feather from "feather-icons";
 import { onMounted, ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useLoginState } from "@/stores/loginState";
+import { useAvailableQuestState } from "@/stores/availableQuestsState";
 
 const router = useRouter();
 const route = useRoute();
 const currentPath = ref("");
 const loginState = useLoginState();
+const availableQuestsState = useAvailableQuestState();
 
 const navigateHome = () => {
   router.push("/home");
 };
 const navigateQuest = () => {
-  router.push("/quest/1");
+  if (availableQuestsState.quests.length === 0) {
+    alert('진행 가능한 퀘스트가 없습니다. 내일을 기다려주세요.')
+    return;
+  }
+  const questId = availableQuestsState.quests[0];
+  router.push(`/quest/${questId}`);
 };
 const navigateMap = () => {
   router.push('/map')
