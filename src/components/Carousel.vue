@@ -1,6 +1,6 @@
 <template>
   <div class="carousel-container">
-    <button @click="prev" class="carousel-button prev">‹</button>
+    <button v-show="currentIndex !== 0" @click="prev" class="carousel-button prev">‹</button>
 
     <div class="carousel">
       <div class="carousel-item" v-for="(item, index) in visibleImages" :key="index">
@@ -9,7 +9,7 @@
             :src="item.img"
             alt="carousel image"
             class="carousel-image"
-            @click="handleImageClick(index + 1)"
+            @click="handleImageClick(item.idx)"
           />
           <!-- item.completed가 true일 때만 image-overlay를 표시 -->
           <div v-if="item.completed" class="image-overlay">
@@ -18,7 +18,7 @@
         </div>
       </div>
     </div>
-    <button @click="next" class="carousel-button next">›</button>
+    <button v-show="currentIndex + 3 < data.length" @click="next" class="carousel-button next">›</button>
   </div>
 </template>
 
@@ -35,16 +35,17 @@ const props = defineProps({
 
 const emit = defineEmits();
 
-const data = ref([]);
-data.value = props.quests;
+const data = ref(props.quests);
 
 const visibleImages = ref(data.value.slice(0, 3));
 
 const currentIndex = ref(0);
 
+
 const prev = () => {
   if (currentIndex.value > 0) {
     currentIndex.value--;
+    console.log(currentIndex)
   } else {
     currentIndex.value = data.value.length - 3;
   }
@@ -54,6 +55,7 @@ const prev = () => {
 const next = () => {
   if (currentIndex.value < data.value.length - 3) {
     currentIndex.value++;
+    console.log(currentIndex)
   } else {
     currentIndex.value = 0;
   }
