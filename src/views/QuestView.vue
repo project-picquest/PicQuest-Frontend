@@ -1,5 +1,7 @@
 <template>
-  <div class="container">
+  <Spinner v-if="isLoading"/>
+  <div v-else class="container">
+    
     <div class="quest_info-box">
       <span
         >{{ questInfo.date.split("-")[0] }}년 {{ questInfo.date.split("-")[1] }}월
@@ -59,6 +61,7 @@ import { _getQuestDetail, _postImage, _postQuest } from "@/api";
 import { useRoute, useRouter } from "vue-router";
 import { useLoginState } from "@/stores/loginState";
 import { useQuestState } from "@/stores/questState";
+import Spinner from "@/components/Spinner.vue"
 
 // TODO: api 켜지면 빈 문자열로 변경
 const questInfo = ref({
@@ -74,6 +77,7 @@ const router = useRouter();
 const questId = route.params.id;
 const questState = useQuestState();
 const originalQuestId = ref(0);
+const isLoading = ref(false);
 
 onMounted(() => {
   feather.replace();
@@ -123,6 +127,8 @@ const handleFileUpload = (e) => {
 
 // SUBMIT, FILE ENCODING
 const handleSubmit = () => {
+  isLoading.value = true;
+  console.log(isLoading.value)
   const requestData = {
     first_image: questInfo.value.img,
     second_image: uploadedImageUrl.value,
@@ -153,10 +159,14 @@ const handleSubmit = () => {
         formData,
         (response) => {
           console.log("파이썬 서버에 전송 성공");
+          isLoading.value = false;
+          console.log(isLoading.value)
 
           console.log(response);
 
-          const similarity = Math.floor(response.data.유사도 * 100);
+          const similarity = Math.floor((Math.floor(response.data.유사도 * 100) - 30) * (10 / 7)) < 0 ? 0 : Math.floor((Math.floor(response.data.유사도 * 100) - 30) * (10 / 7));
+          
+          
           questState.setQuestInfo(
             questId,
             title.value,
@@ -165,7 +175,7 @@ const handleSubmit = () => {
           );
 
           // TODO: 실제 받는 데이터 활용
-          if (response.data.유사도 > 0.9) {
+          if (response.data.유사도 > 0.8) {
             router.push(`/result/success/${questId}`);
             const loginState = useLoginState();
             const newFormData = new FormData();
@@ -196,10 +206,12 @@ const handleSubmit = () => {
               }
             );
           } else {
+            
             router.push(`/result/fail/${questId}`);
           }
         },
         (error) => {
+          isLoading.value = false;
           console.error("파이썬 서버에 전송 실패", error);
         }
       );

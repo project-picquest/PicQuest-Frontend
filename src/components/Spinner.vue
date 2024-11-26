@@ -23,7 +23,7 @@ onMounted(() => {
       message.value = '조금만 더 기다려주세요';
       isFading.value = false;
     }, 300);
-  }, 800);
+  }, 700);
 });
 </script>
 
@@ -32,8 +32,11 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   width: 100%;
+  height: 100vh;
   align-items: center;
+  justify-content: center;
   gap: 0.3em;
+  z-index: 9999;
 }
 
 .text {
