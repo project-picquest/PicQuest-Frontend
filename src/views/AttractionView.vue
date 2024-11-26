@@ -13,7 +13,7 @@
       </div>
       <div class="picture-container">
         <div class="more-pictures-box">
-          <span class="more-pictures">사진 더보기</span>
+          <span v-show="attractionInfo.additionalPhotos?.length > 0" class="more-pictures">사진 더보기</span>
         </div>
 
         <!-- TODO: 슬라이더로 교체 -->
@@ -103,7 +103,7 @@ const navigateMap = () => {
 .image-container {
   width: 38rem;
   height: 40rem;
-  border-radius: 2rem;
+  border-radius: 1rem;
   overflow: hidden;
   margin-top: 1.5rem;
   flex-shrink: 0;
