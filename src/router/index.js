@@ -43,6 +43,11 @@ const router = createRouter({
       component: () => import('@/views/AttractionView.vue'),
     },
     {
+      path: '/attraction/upload/:id',
+      name : 'upload',
+      component : () => import("@/views/UploadMoreImageView.vue")
+    },
+    {
       path: '/result',
       name: 'result',
       children: [
@@ -82,6 +87,7 @@ const router = createRouter({
       name: 'map',
       component : () => import('@/views/Map.vue')
     },
+
     {
       path: '/:catchAll(.*)',
       name: 'error',

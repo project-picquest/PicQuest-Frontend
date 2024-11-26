@@ -37,6 +37,12 @@ const _getAttractionDetail = (num, success, fail) => {
   local.get(`/attractions/detail/${num}`).then(success).catch(fail);
 };
 
+const _postAddPhoto = (param, success, fail) => {
+  const headers = {
+    "Content-Type": "multipart/form-data",}
+  local.post('/attractions/addPhoto', param, { headers }).then(success).catch(fail)
+}
+
 const _postImage = (param, success, fail) => {
   local_py.post(`/submitimage`, param).then(success).catch(fail);
 };
@@ -60,6 +66,7 @@ export {
   _getAttractions,
   _getAttractionsByTitle,
   _getAttractionDetail,
+  _postAddPhoto,
   _postImage,
   _getUserProfile,
   _putUserProfile

@@ -11,47 +11,46 @@
           <p>{{ attractionInfo.addr1 }} {{ attractionInfo.addr2 }}</p>
         </div>
       </div>
-      <div class="picture-container">
-        <div class="more-pictures-box">
-          <span v-show="attractionInfo.additionalPhotos?.length > 0" class="more-pictures"
-            >사진 더보기</span
-          >
-        </div>
 
-        <!-- TODO: 슬라이더로 교체 -->
-        <div class="picture-input-container">
-          <div
-            v-for="(photo, index) in attractionInfo.additionalPhotos"
-            :key="index"
-            class="picture-input-box"
-          >
-            <!-- TODO: 스타일 수정 -->
-            <img :src="photo" :alt="'photo-' + index" class="additional-photo" />
+      <form @submit.prevent="handleSubmit" class="form-container">
+        <div class="picture-container">
+          <div @click="handleClick" class="picture-input-box">
+            <input
+              type="file"
+              ref="inputRef"
+              @change="handleFileUpload"
+              accept="image/*"
+            />
+            <img
+              v-show="uploadedImageUrl"
+              class="uploaded-image"
+              :src="uploadedImageUrl"
+              alt=""
+            />
+            <div v-show="!uploadedImageUrl">
+              <i data-feather="plus" class="icon"></i>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="button-box">
-        <button @click="navigateUploadPicture(attractionNum)" class="submit-button picture">나도 찍으러 가기</button>
-        <button @click="navigateMap" class="submit-button map">지도에서 보기</button>
-      </div>
+        <button @click="navigateMap" class="submit-button">사진 등록하기</button>
+      </form>
     </div>
   </div>
 </template>
 
 <script setup>
-import noImage from "@/assets/no-image.jpg";
-import { _getAttractionDetail } from "@/api";
+import feather from "feather-icons";
+import { _getAttractionDetail, _postAddPhoto } from "@/api";
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useRouter } from "vue-router";
-import { useAttractionState } from "@/stores/attractionState";
 
 const route = useRoute();
 const router = useRouter();
-const attractionState = useAttractionState();
 const attractionNum = route.params.id;
+const uploadedImageUrl = ref(null);
+const inputRef = ref(null);
 
-// TODO: api 연동 후 빈 문자열로 변경
 const attractionInfo = ref({
   no: 0,
   title: "",
@@ -67,21 +66,42 @@ const attractionInfo = ref({
 });
 
 onMounted(() => {
+  feather.replace();
   // TODO: api 연동 후 주석 삭제
   getAttractionInfo();
+  window.scrollTo(0, document.documentElement.scrollHeight);
 });
+
+const isFileImage = (file) => {
+  return file && file.type.split("/")[0] === "image";
+};
+
+const handleClick = () => {
+  inputRef.value.click();
+};
+
+const handleFileUpload = (e) => {
+  const $input = e.target;
+  const file = $input.files[0];
+  if (!isFileImage(file)) {
+    // TODO: 실행 순서 이상함
+    alert("이미지만 업로드 가능합니다.");
+    $input.value = "";
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = () => {
+    uploadedImageUrl.value = reader.result;
+  };
+  reader.readAsDataURL(file);
+  console.log(uploadedImageUrl.value);
+};
 
 const getAttractionInfo = () => {
   _getAttractionDetail(
     attractionNum,
     (response) => {
       attractionInfo.value = response.data;
-      console.log(response.data);
-      attractionState.setAttractionState(
-        response.data.title,
-        response.data.latitude,
-        response.data.longitude
-      );
     },
     (error) => {
       console.error("_getAttractionDetail API 요청 실패", error);
@@ -89,15 +109,39 @@ const getAttractionInfo = () => {
   );
 };
 
-const navigateMap = () => {
-  router.push("/map");
+const handleSubmit = () => {
+  const formData = new FormData();
+  formData.append("attractionNo", JSON.stringify(attractionNum));
+
+  const addImageToFormData = (imageUrl, formData, fieldName) => {
+    return fetch(imageUrl)
+      .then((response) => response.blob())
+      .then((blob) => {
+        const file = new File([blob], fieldName + ".jpg", {
+          type: "image/jpeg",
+        });
+        formData.append(fieldName, file);
+      })
+      .catch((error) => {
+        console.error("이미지 로드 실패:", error);
+      });
+  };
+
+  addImageToFormData(uploadedImageUrl.value, formData, "image").then(() => {
+    _postAddPhoto(
+      formData,
+      (response) => {
+        console.log("사진 더보기 추가");
+        console.log(response.data);
+        router.push(`/attraction/${attractionNum}`);
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+  });
 };
-
-const navigateUploadPicture = (attractionNum) => {
-  router.push(`/attraction/upload/${attractionNum}`)
-}
 </script>
-
 <style scoped>
 .container {
   /* background-color: green; */
@@ -141,26 +185,14 @@ const navigateUploadPicture = (attractionNum) => {
   font-size: 1rem;
 }
 
-.button-box {
-  display: flex;
-  gap: 1rem;
-}
-
 .submit-button {
   width: 100%;
   height: 3.5rem;
-  
+  background-color: #f74320;
   font-weight: 600;
   color: white;
   border-radius: 10px;
   margin-top: 0.8rem;
-}
-
-.submit-button.picture {
-  background-color: #3a3a3a;
-}
-.submit-button.map {
-background-color: #f74320;
 }
 
 .main-container {
@@ -174,12 +206,23 @@ background-color: #f74320;
   margin-bottom: 2rem;
 }
 
+.form-container {
+  display: flex;
+  flex-direction: column;
+  width: 38rem;
+  height: 100%;
+  /* background-color: blue; */
+  /* flex-grow: 1; */
+  /* margin-top: 2rem; */
+  /* margin-bottom: 2rem; */
+}
+
 .picture-container {
   display: flex;
   flex-direction: column;
 
   flex-grow: 1;
-  /* margin-top: 2rem; */
+  margin-top: 2rem;
   margin-bottom: 1rem;
   /* background-color: red; */
 }
@@ -213,7 +256,6 @@ background-color: #f74320;
 .info-container {
   width: 38rem;
   display: flex;
-  margin-bottom: 2rem;
 }
 
 .more-pictures-box {
@@ -225,5 +267,34 @@ background-color: #f74320;
   font-size: 1.1rem;
   font-weight: 700;
 }
+.picture-input-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  width: 30%;
+  aspect-ratio: 1/1;
+  border-radius: 1rem;
+  border: 2px solid #d9d9d9;
+  margin-left: 0.5rem;
+  overflow: hidden;
+  cursor: pointer;
+}
 
+.picture-input-box input {
+  display: none;
+}
+
+.uploaded-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.icon {
+  width: 5rem;
+  height: 5rem;
+  stroke-width: 0.05rem;
+  stroke: #d9d9d9;
+}
 </style>
