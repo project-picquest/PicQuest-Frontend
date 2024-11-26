@@ -176,7 +176,7 @@ const handleSubmit = () => {
           );
 
           // TODO: 실제 받는 데이터 활용
-          if (response.data.유사도 > 0.8) {
+          if (response.data.유사도 > 0.87) {
             router.push(`/result/success/${questId}`);
             const loginState = useLoginState();
             const availableQuestsState = useAvailableQuestState();

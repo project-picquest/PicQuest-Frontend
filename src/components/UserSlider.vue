@@ -36,31 +36,27 @@ const props = defineProps({
   nickname: String,
   userScore: Number,
 });
-
-const star = ref('');
-if (props.userScore > 200) {
-  star.value = star3;
-} else if (props.userScore > 100) {
-  star.value = star2;
-} else {
-  star.value = star1;
-}
-
 const questState = useQuestState();
 const widthByScore = ref(0);
+const star = ref('');
 
 onMounted(() => {
   setTimeout(() => {
     widthByScore.value = props.userScore  % 100 ;
   }, 50);
-
-
 });
 
 watch(
   () => props.userScore,
   (newScore) => {
     widthByScore.value = newScore % 100;
+    if (newScore > 200) {
+  star.value = star3;
+} else if (newScore > 1) {
+  star.value = star2;
+} else {
+  star.value = star1;
+}
   }
 );
 </script>
